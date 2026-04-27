@@ -98,13 +98,13 @@ function runSingleTrial(
 
     var dispScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBackHeight/2-imgBorderHeight}px; left: ${w/2-imgBackWidth/2-imgBorderWidth}px;">        
-                    <img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px;"></img> </div>
+        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
+                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px;"></img> </div>
                     <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-                    <div style="position: absolute; transform: rotate(0deg);">
+                    <div style="position: absolute; transform: rotate(90deg);">
                     <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px;"> </img></div>
                     <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.08-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.95-(imgPeopleHeight/2)}px; left: 200px;"><img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img></div>
+                    <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.85-(imgPeopleWidth/2)}px;"><img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img></div>
                     </div></div>`,
         choices: ['f', 'j'],
         trial_duration: null,
@@ -156,7 +156,7 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBackHeight/2-imgBorderHeight}px; left: ${w/2-imgBackWidth/2-imgBorderWidth}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px;"></img> </div><div style="font-size:60px;">+</div>`,
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px;"></img> </div><div style="font-size:60px;">+</div>`,
         prompt: `${persistent_prompt}`,
         choices: "NO_KEYS",
         trial_duration: FIXATION_DISP_TIME,

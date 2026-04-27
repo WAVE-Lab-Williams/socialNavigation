@@ -7,7 +7,7 @@ Defining Parameter Variables
 var stimFolder = 'src/assets/stimuli/people/'
 
 var runIntro = false;
-var runInstr = false;
+var runInstr = true;
 var runExpt = true;
 var runClose = false;
 var runPreload = false;
@@ -52,8 +52,8 @@ var origBackWidth = 600;
 var origBackHeight = 600;
 var origPeopleWidth = 612;
 var origPeopleHeight = 612;
-var origBorderWidth = 25;
-var origBorderHeight = 25;
+var origBorderWidth = 650;
+var origBorderHeight = 650;
 
 
 if (h < 400) {
