@@ -212,7 +212,7 @@ var instructions2 = {
 };
 
 timelineinstr.push(instructions1);
-runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
+// runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
 timelineinstr.push(instructions2);
 
 /*
@@ -223,27 +223,36 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_circle_colors = ["blue","orange"];
-var poss_disp_duration = [200, 500];
+var poss_stripe_angles = [20, 30, 40];
+var poss_identical = [true, false];
+var poss_difficulty = [10]
+//var poss_disp_duration = [900, 1100];
+var poss_groups = ["3_5","5_3","5_5","3_3"]
 
 var factors = {
-    circle_color: poss_circle_colors,
-    disp_duration: poss_disp_duration
+    stripe_angle_top: poss_stripe_angles,
+    //disp_duration: poss_disp_duration,
+    identical: poss_identical,
+    difficulty: poss_difficulty,
+    group: poss_groups,
 }
 
 var full_design = jsPsych.randomization.factorial(factors, 1);
 console.log(full_design);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
-for (var i = 0; i < poss_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${poss_circle_colors[i]}-circle.png`);
-}
+// for (var i = 0; i < poss_circle_colors.length; i++) {
+//     forPreload.push(`${stimFolder}${poss_circle_colors[i]}-circle.png`);
+// }
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
-        full_design[elem].circle_color,
-        full_design[elem].disp_duration,
+        full_design[elem].stripe_angle_top,
+        //full_design[elem].disp_duration,
+        full_design[elem].identical,
+        full_design[elem].difficulty,
+        full_design[elem].group,
         timelineexpt,
         'expt',
     );
