@@ -7,7 +7,7 @@ Defining Parameter Variables
 var stimFolder = 'src/assets/stimuli/people/'
 
 var runIntro = false;
-var runInstr = false;
+var runInstr = true;
 var runExpt = true;
 var runClose = false;
 var runPreload = false;
