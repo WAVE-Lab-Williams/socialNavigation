@@ -226,12 +226,12 @@ EXPERIMENT SECTION (*sec_expt)
 var poss_stripe_angles = [20, 30, 40];
 var poss_identical = [true, false];
 var poss_difficulty = [10]
-//var poss_disp_duration = [900, 1100];
+var poss_rotations = [0 ,90, 180];
 var poss_groups = ["3_5","5_3","5_5","3_3"]
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
-    //disp_duration: poss_disp_duration,
+    rotation: poss_rotations,
     identical: poss_identical,
     difficulty: poss_difficulty,
     group: poss_groups,
@@ -249,7 +249,7 @@ console.log(full_design);
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
         full_design[elem].stripe_angle_top,
-        //full_design[elem].disp_duration,
+        full_design[elem].rotation,
         full_design[elem].identical,
         full_design[elem].difficulty,
         full_design[elem].group,

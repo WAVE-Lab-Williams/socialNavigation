@@ -5,7 +5,7 @@ PUSHING/RUNNING A CUSTOM SINGLE TRIAL (*singleTrial)
 */
 function runSingleTrial(
     stripe_angle_top,
-    //disp_duration,
+    rotation,
     identical,
     difficulty,
     group,
@@ -99,12 +99,12 @@ function runSingleTrial(
     var dispScene = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
-                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px;"></img> </div>
+                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
                     <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-                    <div style="position: absolute; transform: rotate(90deg);">
-                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px;"> </img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.08-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.85-(imgPeopleWidth/2)}px;"><img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img></div>
+                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
+                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
+                    <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
+                    <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.75-(imgPeopleWidth/2)}px;"><img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img></div>
                     </div></div>`,
         choices: ['f', 'j'],
         trial_duration: null,
@@ -113,7 +113,7 @@ function runSingleTrial(
         data: {
             trial_category: 'answer'+trialType,
             // trial_stimulus: thisStim,
-            //trial_duration: disp_duration,
+            trial_rotation: rotation,
             stripe_angle_top: stripe_angle_top,
             stripe_angle_bottom: stripe_angle_top-difficulty,
             difficulty: difficulty,
