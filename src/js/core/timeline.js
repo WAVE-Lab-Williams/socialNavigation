@@ -172,6 +172,9 @@ INSTR PROCEDURE (*sec_instr)
 //     forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
 // }
 
+forPreload.push(`${stimFolder}person_example_different.png`);
+forPreload.push(`${stimFolder}person_example_same.png`);
+
 // //decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
 // var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
 // var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
