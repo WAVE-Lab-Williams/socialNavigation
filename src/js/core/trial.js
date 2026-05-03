@@ -80,23 +80,38 @@ function runSingleTrial(
     //     } // on finish end
     // }; // dispCircle end
 
-     var dispBackground = {
+    //  var disp = {
+    //     type: jsPsychHtmlKeyboardResponse,
+    //     stimulus: `<div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px; transform: rotate(0deg);">
+    //                 <div style="position: absolute; top: 0px; left: 0px;"><img src="${stimFolder}sN_35_blank.png" style="width: ${imgBackWidth}px;"> </img></div>
+    //                 </div>`,
+    //     choices: ['f', 'j'],
+    //     trial_duration: BACKGROUND_DISP_TIME,
+    //     response_ends_trial: true,
+    //     prompt: `${persistent_prompt}`,
+    //     data: {
+    //         trial_category: 'prestimBackground'+trialType,
+    //     }, // data end
+    // }; // dispCircle end
+
+    var dispHalfScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px; transform: rotate(0deg);">
-                    <div style="position: absolute; top: 0px; left: 0px;"><img src="${stimFolder}sN_35_blank.png" style="width: ${imgBackWidth}px;"> </img></div>
-                    </div>`,
-        choices: ['f', 'j'],
-        trial_duration: BACKGROUND_DISP_TIME,
-        response_ends_trial: true,
+        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
+                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
+                    <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
+                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
+                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
+                    <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
+                    </div></div>`,
+        choices: 'NO_KEYS',
+        trial_duration: PERSON_ONE_DISP_TIME,
+        response_ends_trial: false,
         prompt: `${persistent_prompt}`,
-        data: {
-            trial_category: 'prestimBackground'+trialType,
-        }, // data end
-    }; // dispCircle end
+    }; // dispHalfScene
 
 
 
-    var dispScene = {
+    var dispFullScene = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
                     <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
@@ -156,7 +171,7 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px;"></img> </div><div style="font-size:60px;">+</div>`,
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px; z-index:1;"></img> </div><div style="font-size:60px; z-index:2; position: relative;">+</div>`,
         prompt: `${persistent_prompt}`,
         choices: "NO_KEYS",
         trial_duration: FIXATION_DISP_TIME,
@@ -172,7 +187,8 @@ function runSingleTrial(
     //timelineTrialsToPush.push(cursor_off);
     // timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation);
-    timelineTrialsToPush.push(dispScene);
+    timelineTrialsToPush.push(dispHalfScene);
+    timelineTrialsToPush.push(dispFullScene);
     // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
     // timelineTrialsToPush.push(cursor_on);
 

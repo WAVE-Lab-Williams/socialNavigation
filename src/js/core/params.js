@@ -6,19 +6,20 @@ Defining Parameter Variables
 
 var stimFolder = 'src/assets/stimuli/people/'
 
-var runIntro = false;
+var runIntro = true;
 var runInstr = true;
 var runExpt = true;
-var runClose = false;
+var runClose = true;
 var runPreload = false;
 
 // Defining Core Variables that remain constant
 // var PRESTIM_DISP_TIME = 800;
-var FIXATION_DISP_TIME = 500;
+var FIXATION_DISP_TIME = 600;
 var BACKGROUND_DISP_TIME = 200;
+var PERSON_ONE_DISP_TIME = 275;
 
 // Variables for Participant Information
-var estTotalRunTime = 5;
+var estTotalRunTime = 10;
 var estDollars = 0.9;
 var participantType = 'prolific';
 var completionCode = 'C4MF2IV1';

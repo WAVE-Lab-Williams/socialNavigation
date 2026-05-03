@@ -164,17 +164,17 @@ INSTR PROCEDURE (*sec_instr)
 
 /* -------  Set Preload Images for Instr + Demo (*preload_instr) -------------- */
 
-forPreload.push(`${stimFolder}demo-circles.png`);
-// make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
-var demo_circle_colors = ["blue","orange"];
-var demo_display_durations = [200, 500];
-for (var i = 0; i < demo_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
-}
+// forPreload.push(`${stimFolder}demo-circles.png`);
+// // make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
+// var demo_circle_colors = ["blue","orange"];
+// var demo_display_durations = [200, 500];
+// for (var i = 0; i < demo_circle_colors.length; i++) {
+//     forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
+// }
 
-//decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
-var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
-var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
+// //decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
+// var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
+// var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
@@ -241,9 +241,12 @@ var full_design = jsPsych.randomization.factorial(factors, 1);
 console.log(full_design);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
-// for (var i = 0; i < poss_circle_colors.length; i++) {
-//     forPreload.push(`${stimFolder}${poss_circle_colors[i]}-circle.png`);
-// }
+for (var i = 0; i < poss_stripe_angles.length; i++) {
+     forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]}.png`);
+}
+for (var i = 0; i < poss_groups.length; i++) {
+     forPreload.push(`${stimFolder}background_${poss_groups[i]}.png`);
+}
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
 for (var elem = 0; elem < full_design.length; elem++) {
