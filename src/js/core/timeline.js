@@ -164,21 +164,24 @@ INSTR PROCEDURE (*sec_instr)
 
 /* -------  Set Preload Images for Instr + Demo (*preload_instr) -------------- */
 
-forPreload.push(`${stimFolder}demo-circles.png`);
-// make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
-var demo_circle_colors = ["blue","orange"];
-var demo_display_durations = [200, 500];
-for (var i = 0; i < demo_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
-}
+// forPreload.push(`${stimFolder}demo-circles.png`);
+// // make sure to load any images you need for the demo itself. Usually you have different demo images than the main expt, such that you don't give away the content of the expt itself (but still give the participant practice and familiarity with the task. In this case, though, the demo images themselves are identical to the main expt. Variable names are the only difference.
+// var demo_circle_colors = ["blue","orange"];
+// var demo_display_durations = [200, 500];
+// for (var i = 0; i < demo_circle_colors.length; i++) {
+//     forPreload.push(`${stimFolder}${demo_circle_colors[i]}-circle.png`);
+// }
 
-//decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
-var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
-var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
+forPreload.push(`${stimFolder}person_example_different.png`);
+forPreload.push(`${stimFolder}person_example_same.png`);
+
+// //decide what the parameters for the demo trial should be. Sometimes you hardcode this, sometimes you randomly choose from the options you defined above.
+// var thisDemoCircle = randomChoice(demo_circle_colors,1)[0];
+// var thisDemoDispDuration = randomChoice(demo_display_durations,1)[0];
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
-var demoTrialIndex = 3;
+var demoTrialIndex = 4;
 var [instrContent_beforedemo,instrContent_afterdemo] = cutArray(instrContent,3);
 
 var instructions1 = {
@@ -212,7 +215,7 @@ var instructions2 = {
 };
 
 timelineinstr.push(instructions1);
-runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
+// runSingleTrial(thisDemoCircle,thisDemoDispDuration,timelineinstr,"prac") // pushesyour demo trial
 timelineinstr.push(instructions2);
 
 /*
@@ -223,27 +226,39 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_circle_colors = ["blue","orange"];
-var poss_disp_duration = [200, 500];
+var poss_stripe_angles = [20, 30, 40];
+var poss_identical = [true, false];
+var poss_difficulty = [10]
+var poss_rotations = [0 ,90, 180];
+var poss_groups = ["3_5","5_3","5_5","3_3"]
 
 var factors = {
-    circle_color: poss_circle_colors,
-    disp_duration: poss_disp_duration
+    stripe_angle_top: poss_stripe_angles,
+    //rotation: poss_rotations,
+    identical: poss_identical,
+    difficulty: poss_difficulty,
+    group: poss_groups,
 }
 
 var full_design = jsPsych.randomization.factorial(factors, 1);
 console.log(full_design);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
-for (var i = 0; i < poss_circle_colors.length; i++) {
-    forPreload.push(`${stimFolder}${poss_circle_colors[i]}-circle.png`);
+for (var i = 0; i < poss_stripe_angles.length; i++) {
+     forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]}.png`);
+}
+for (var i = 0; i < poss_groups.length; i++) {
+     forPreload.push(`${stimFolder}background_${poss_groups[i]}.png`);
 }
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
-        full_design[elem].circle_color,
-        full_design[elem].disp_duration,
+        full_design[elem].stripe_angle_top,
+        //full_design[elem].rotation,
+        full_design[elem].identical,
+        full_design[elem].difficulty,
+        full_design[elem].group,
         timelineexpt,
         'expt',
     );

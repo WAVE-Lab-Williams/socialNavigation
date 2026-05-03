@@ -4,17 +4,19 @@ Defining Parameter Variables
 ===============================================================
 */
 
-var stimFolder = 'src/assets/stimuli/circles/'
+var stimFolder = 'src/assets/stimuli/people/'
 
 var runIntro = true;
 var runInstr = true;
 var runExpt = true;
 var runClose = true;
-var runPreload = true;
+var runPreload = false;
 
 // Defining Core Variables that remain constant
-var PRESTIM_DISP_TIME = 800;
-var FIXATION_DISP_TIME = 500;
+// var PRESTIM_DISP_TIME = 800;
+var FIXATION_DISP_TIME = 600;
+var BACKGROUND_DISP_TIME = 200;
+var PERSON_ONE_DISP_TIME = 300;
 
 // Variables for Participant Information
 var estTotalRunTime = 5;
@@ -44,10 +46,29 @@ var h =
     document.documentElement.clientHeight ||
     document.body.clientHeight;
 
+console.log(w,h)
+
 // setting display image width
-var origWidth = 300;
-var origHeight = 300;
-var imgWidth = 150; // your desired display img width
-var imgHeight = (imgWidth / origWidth) * origHeight;
+var origBackWidth = 600;
+var origBackHeight = 600;
+var origPeopleWidth = 612;
+var origPeopleHeight = 612;
+var origBorderWidth = 650;
+var origBorderHeight = 650;
 
 
+if (h < 400) {
+    var imgBackWidth = 400; // your desired display img width
+    var imgPeopleWidth = 53; // your desired display img width
+} else {
+    var imgBackWidth = 500; // your desired display img width
+    var imgPeopleWidth = 72; // your desired display img width
+}
+    var scalingBackRatio = (imgBackWidth / origBackWidth)
+    var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth)
+
+    var imgBackHeight = scalingBackRatio * origBackHeight;
+    var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
+    var imgBorderHeight = scalingBackRatio  * origBorderHeight
+    var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
+    var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
