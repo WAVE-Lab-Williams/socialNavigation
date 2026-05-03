@@ -178,7 +178,7 @@ INSTR PROCEDURE (*sec_instr)
 
 /* -------  Push Instr + Demo Trials to timeline_instr (*push_instr) -------------- */
 var instrContent = loadInstrContent();
-var demoTrialIndex = 3;
+var demoTrialIndex = 4;
 var [instrContent_beforedemo,instrContent_afterdemo] = cutArray(instrContent,3);
 
 var instructions1 = {
