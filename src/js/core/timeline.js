@@ -231,7 +231,7 @@ var poss_groups = ["3_5","5_3","5_5","3_3"]
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
-    rotation: poss_rotations,
+    //rotation: poss_rotations,
     identical: poss_identical,
     difficulty: poss_difficulty,
     group: poss_groups,
@@ -252,7 +252,7 @@ for (var i = 0; i < poss_groups.length; i++) {
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
         full_design[elem].stripe_angle_top,
-        full_design[elem].rotation,
+        //full_design[elem].rotation,
         full_design[elem].identical,
         full_design[elem].difficulty,
         full_design[elem].group,

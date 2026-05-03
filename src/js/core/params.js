@@ -6,8 +6,8 @@ Defining Parameter Variables
 
 var stimFolder = 'src/assets/stimuli/people/'
 
-var runIntro = true;
-var runInstr = true;
+var runIntro = false;
+var runInstr = false;
 var runExpt = true;
 var runClose = true;
 var runPreload = false;
@@ -16,7 +16,7 @@ var runPreload = false;
 // var PRESTIM_DISP_TIME = 800;
 var FIXATION_DISP_TIME = 600;
 var BACKGROUND_DISP_TIME = 200;
-var PERSON_ONE_DISP_TIME = 275;
+var PERSON_ONE_DISP_TIME = 500;
 
 // Variables for Participant Information
 var estTotalRunTime = 10;
@@ -61,8 +61,8 @@ if (h < 400) {
     var imgBackWidth = 400; // your desired display img width
     var imgPeopleWidth = 53; // your desired display img width
 } else {
-    var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 53; // your desired display img width
+    var imgBackWidth = 500; // your desired display img width
+    var imgPeopleWidth = 72; // your desired display img width
 }
     var scalingBackRatio = (imgBackWidth / origBackWidth)
     var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth)

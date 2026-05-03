@@ -5,7 +5,7 @@ PUSHING/RUNNING A CUSTOM SINGLE TRIAL (*singleTrial)
 */
 function runSingleTrial(
     stripe_angle_top,
-    rotation,
+    //rotation,
     identical,
     difficulty,
     group,
@@ -94,6 +94,28 @@ function runSingleTrial(
     //     }, // data end
     // }; // dispCircle end
 
+    var rotation = randomChoice(poss_rotations, 1)[0];
+
+
+    var dispOneThirdScene = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
+                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
+                    <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
+                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
+                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
+                    </div></div>`,
+        choices: 'NO_KEYS',
+        trial_duration: PERSON_ONE_DISP_TIME,
+        response_ends_trial: false,
+        prompt: `${persistent_prompt}`,
+        data: {
+            trial_category: 'dispThird' + trialType,
+        }
+    }; // dispOneThirdScene
+    
+
+
     var dispHalfScene = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
@@ -107,9 +129,12 @@ function runSingleTrial(
         trial_duration: PERSON_ONE_DISP_TIME,
         response_ends_trial: false,
         prompt: `${persistent_prompt}`,
+        data: {
+            trial_category: 'dispHalf' + trialType,
+        }
     }; // dispHalfScene
 
-
+    
 
     var dispFullScene = {
         type: jsPsychHtmlKeyboardResponse,
@@ -187,6 +212,7 @@ function runSingleTrial(
     //timelineTrialsToPush.push(cursor_off);
     // timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation);
+    timelineTrialsToPush.push(dispOneThirdScene);
     timelineTrialsToPush.push(dispHalfScene);
     timelineTrialsToPush.push(dispFullScene);
     // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
