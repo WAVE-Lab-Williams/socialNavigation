@@ -55,7 +55,7 @@ function runSingleTrial(
         var personRight = `${stimFolder}person_${stripe_angle_top-difficulty}.png`
     }
     
-    var persistent_prompt = `<div style="position: fixed; top: 1%; left: 50%; transform: translateX(-50%); text-align: center;">f = same stripes; j = different stripes </div>`;
+    var persistent_prompt = `<div style="position: fixed; top: 90%; left: 50%; transform: translateX(-50%); text-align: center;">f = same stripes; j = different stripes </div>`;
 
     /* testing a slider */
     // tarSize = 40;
@@ -196,7 +196,7 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px; z-index:1;"></img> </div><div style="font-size:60px; z-index:2; position: relative;">+</div>`,
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px; z-index:1;"></img></div><div style="position: absolute; top: ${h/2}px; left: ${w/2}px; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,
         prompt: `${persistent_prompt}`,
         choices: "NO_KEYS",
         trial_duration: FIXATION_DISP_TIME,
@@ -205,17 +205,28 @@ function runSingleTrial(
         }
     };
 
+    // var fixation = {
+    //     type: jsPsychHtmlKeyboardResponse,
+    //     stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;"><img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px; z-index:1;"></img></div><div style="position: absolute; top: ${h/2}px; left: ${w/2}px; transform: translate(-50%, -50%); font-size:60px; z-index:2;">+</div>`,
+    //     prompt: `${persistent_prompt}`,
+    //     choices: "NO_KEYS",
+    //     trial_duration: FIXATION_DISP_TIME,
+    //     data: {
+    //         trial_category: 'fixation' + trialType,
+    //     }
+    // };
+
 
     /*--------------------------- push single trial sequence ---------------------------*/
 
-    //timelineTrialsToPush.push(if_notFull);
-    //timelineTrialsToPush.push(cursor_off);
+    timelineTrialsToPush.push(if_notFull);
+    timelineTrialsToPush.push(cursor_off);
     // timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation);
     timelineTrialsToPush.push(dispOneThirdScene);
     timelineTrialsToPush.push(dispHalfScene);
     timelineTrialsToPush.push(dispFullScene);
     // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
-    // timelineTrialsToPush.push(cursor_on);
+    timelineTrialsToPush.push(cursor_on);
 
 }
