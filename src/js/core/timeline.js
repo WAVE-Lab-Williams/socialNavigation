@@ -228,7 +228,7 @@ EXPERIMENT SECTION (*sec_expt)
 
 var poss_stripe_angles = [20, 30, 40];
 var poss_identical = [true, false];
-var poss_difficulty = [10]
+var poss_difficulty = [20]
 var poss_rotations = [0 ,90, 180];
 var poss_groups = ["3_5","5_3","5_5","3_3"]
 
@@ -240,7 +240,7 @@ var factors = {
     group: poss_groups,
 }
 
-var full_design = jsPsych.randomization.factorial(factors, 1);
+var full_design = jsPsych.randomization.factorial(factors, 2);
 console.log(full_design);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
