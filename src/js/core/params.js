@@ -23,7 +23,7 @@ var estTotalRunTime = 5;
 var estDollars = 0.9;
 var participantType = 'prolific';
 var completionCode = 'C4MF2IV1';
-var prolific_url = 'https://app.prolific.co/submissions/complete?cc='+completionCode;
+var prolific_url = 'https://app.prolific.com/submissions/complete?cc='+completionCode;
 
 // WAVE Backend Configuration
 var waveBackendUrl = 'https://wave-backend-production-8781.up.railway.app';
