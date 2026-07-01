@@ -59,10 +59,10 @@ var origBorderHeight = 650;
 
 if (h < 400) {
     var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 53; // your desired display img width
+    var imgPeopleWidth = 50; // your desired display img width
 } else {
     var imgBackWidth = 500; // your desired display img width
-    var imgPeopleWidth = 72; // your desired display img width
+    var imgPeopleWidth = 62; // your desired display img width
 }
     var scalingBackRatio = (imgBackWidth / origBackWidth)
     var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth)
