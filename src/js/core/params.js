@@ -10,7 +10,7 @@ var runIntro = true;
 var runInstr = true;
 var runExpt = true;
 var runClose = true;
-var runPreload = false;
+var runPreload = true;
 
 // Defining Core Variables that remain constant
 // var PRESTIM_DISP_TIME = 800;
