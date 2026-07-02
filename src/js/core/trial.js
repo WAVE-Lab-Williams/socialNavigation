@@ -99,7 +99,7 @@ function runSingleTrial(
 
     var dispOneThirdScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
+        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
                     <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
                     <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
                     <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
@@ -118,7 +118,7 @@ function runSingleTrial(
 
     var dispHalfScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
+        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
                     <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
                     <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
                     <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
@@ -138,14 +138,22 @@ function runSingleTrial(
 
     var dispFullScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">        
-                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
-                    <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
-                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.75-(imgPeopleWidth/2)}px;"><img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img></div>
-                    </div></div>`,
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
+                <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
+        </div>
+        <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
+            <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
+                <div style="position: relative; top: 0px; left: 0px;">
+                        <img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img>
+                </div>
+                <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);">
+                        <img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img>
+                </div>
+                <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.75-(imgPeopleWidth/2)}px;">
+                        <img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img>
+                </div>
+            </div>            
+        </div>`, // end stimulus
         choices: ['f', 'j'],
         trial_duration: null,
         response_ends_trial: true,
@@ -196,8 +204,8 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px;">
-        <img src="${stimFolder}background_border.png" style="width: ${imgBackWidth*(13/12)}px; z-index:1;"></img>
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
+                <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
         </div>
         <div style="position: absolute; top: ${h/2}px; left: ${w/2}px; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,
         prompt: `${persistent_prompt}`,

@@ -328,6 +328,12 @@ if (runPreload) {
     var preload = {
         type: jsPsychPreload,
         images: forPreload,
+        auto_preload: true,
+        show_detailed_errors: true,
+        on_error: function(file) {
+            console.log('Error: ',file);
+        },
+        message: 'Please wait while the experiment loads...'
     }
     timelinebase = timelinebase.concat(preload);
 }
