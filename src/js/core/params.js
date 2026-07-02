@@ -10,7 +10,7 @@ var runIntro = true;
 var runInstr = true;
 var runExpt = true;
 var runClose = true;
-var runPreload = false;
+var runPreload = true;
 
 // Defining Core Variables that remain constant
 // var PRESTIM_DISP_TIME = 800;
@@ -20,10 +20,14 @@ var PERSON_ONE_DISP_TIME = 300;
 
 // Variables for Participant Information
 var estTotalRunTime = 5;
-var estDollars = 0.9;
+var estDollars = 0.75;
 var participantType = 'prolific';
+<<<<<<< HEAD
 var completionCode = 'C4MF2IV1';
-var prolific_url = 'https://app.prolific.com/submissions/complete?cc='+completionCode;
+=======
+var completionCode = 'CZJ72LJV';
+>>>>>>> 9b5e388cd282763bc7588aadc39c110944ffd7b1
+var prolific_url = 'https://app.prolific.co/submissions/complete?cc='+completionCode;
 
 // WAVE Backend Configuration
 var waveBackendUrl = 'https://wave-backend-production-8781.up.railway.app';
@@ -59,10 +63,10 @@ var origBorderHeight = 650;
 
 if (h < 400) {
     var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 53; // your desired display img width
+    var imgPeopleWidth = 50; // your desired display img width
 } else {
     var imgBackWidth = 500; // your desired display img width
-    var imgPeopleWidth = 72; // your desired display img width
+    var imgPeopleWidth = 62; // your desired display img width
 }
     var scalingBackRatio = (imgBackWidth / origBackWidth)
     var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth)
