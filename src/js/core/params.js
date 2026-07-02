@@ -22,11 +22,7 @@ var PERSON_ONE_DISP_TIME = 300;
 var estTotalRunTime = 5;
 var estDollars = 0.75;
 var participantType = 'prolific';
-<<<<<<< HEAD
-var completionCode = 'C4MF2IV1';
-=======
 var completionCode = 'CZJ72LJV';
->>>>>>> 9b5e388cd282763bc7588aadc39c110944ffd7b1
 var prolific_url = 'https://app.prolific.co/submissions/complete?cc='+completionCode;
 
 // WAVE Backend Configuration
