@@ -5,7 +5,7 @@ PUSHING/RUNNING A CUSTOM SINGLE TRIAL (*singleTrial)
 */
 function runSingleTrial(
     stripe_angle_top,
-    //rotation,
+    rotation,
     identical,
     difficulty,
     group,
@@ -94,19 +94,25 @@ function runSingleTrial(
     //     }, // data end
     // }; // dispCircle end
 
-    var rotation = randomChoice(poss_rotations, 1)[0];
+
+    var allPeopleColors = ["red", "orange", "green1", "green2", "green3", "blue1", "blue2", "blue3", "blue4", "blue5", "purple"];
+    var allPeople = shuffle(allPeopleColors);
+
+    
+    all_points = calcPlacements(CENTROIDS, rotation);
+
+    var htmloutput = `<div style= "width: 600px; height: 600px; position: absolute; top: 50%; left: 50%; z-index: -999; transform: translate(-50%, -50%);"><img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></img>`;
+        for(var i = 0; i < all_points.length; i++) {
+            htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`
+        };
+        htmloutput += `</div>`;
 
 
     var dispOneThirdScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
-                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
-                    <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
-                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
-                    </div></div>`,
+        stimulus: htmloutput,
         choices: 'NO_KEYS',
-        trial_duration: PERSON_ONE_DISP_TIME,
+        trial_duration: null, //PERSON_ONE_DISP_TIME,
         response_ends_trial: false,
         prompt: `${persistent_prompt}`,
         data: {
@@ -118,13 +124,11 @@ function runSingleTrial(
 
     var dispHalfScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: ` <div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
-                    <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> </div>
-                    <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-                    <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
-                    <div style="position: relative; top: 0px; left: 0px;"><img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img></div>
-                    <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);"><img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img></div>
-                    </div></div>`,
+        stimulus: function() {
+            htmloutput.replace(`</div>`, ``);
+            htmloutput += `<img src="${personLeft}" style="width: ${imgPeopleWidth}px; position: absolute; top: 300px; left: 300px; z-index: 999; transform: rotate(180deg);"></img></div>`;
+            return htmloutput;
+        },
         choices: 'NO_KEYS',
         trial_duration: PERSON_ONE_DISP_TIME,
         response_ends_trial: false,
@@ -133,6 +137,7 @@ function runSingleTrial(
             trial_category: 'dispHalf' + trialType,
         }
     }; // dispHalfScene
+
 
     
 
@@ -204,7 +209,7 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; top: 50%; left: 50%; transform: translate(-50%, -50%);">        
                 <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
         </div>
         <div style="position: absolute; top: ${h/2}px; left: ${w/2}px; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,
@@ -233,10 +238,10 @@ function runSingleTrial(
     timelineTrialsToPush.push(if_notFull);
     timelineTrialsToPush.push(cursor_off);
     // timelineTrialsToPush.push(prestim);
-    timelineTrialsToPush.push(fixation);
+    timelineTrialsToPush.push(fixation); 
     timelineTrialsToPush.push(dispOneThirdScene);
-    timelineTrialsToPush.push(dispHalfScene);
-    timelineTrialsToPush.push(dispFullScene);
+    timelineTrialsToPush.push(dispHalfScene); 
+    //timelineTrialsToPush.push(dispFullScene); NEW
     // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
     timelineTrialsToPush.push(cursor_on);
 

@@ -6,8 +6,8 @@ Defining Parameter Variables
 
 var stimFolder = 'src/assets/stimuli/people/'
 
-var runIntro = true;
-var runInstr = true;
+var runIntro = false;
+var runInstr = false;
 var runExpt = true;
 var runClose = true;
 var runPreload = true;
@@ -17,6 +17,10 @@ var runPreload = true;
 var FIXATION_DISP_TIME = 600;
 var BACKGROUND_DISP_TIME = 200;
 var PERSON_ONE_DISP_TIME = 300;
+var LEFT_CENTROID = [200, 200];
+var RIGHT_CENTROID = [400, 400];
+var CENTROIDS = [LEFT_CENTROID, RIGHT_CENTROID];
+var RADIUS = 50; 
 
 // Variables for Participant Information
 var estTotalRunTime = 5;

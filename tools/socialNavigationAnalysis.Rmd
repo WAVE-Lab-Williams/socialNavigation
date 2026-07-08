@@ -19,7 +19,8 @@ all_data <- read.csv("data/dataframe_answer.csv", header=TRUE)
 #delete all test data
 
 all_data <- all_data |>
-  filter(participant_id != "{{%PROLIFIC_PID%}}")
+  filter(participant_id != "{{%PROLIFIC_PID%}}") |>
+  filter(!str_detect(participant_id, "no_query_worker"))
 
 length(unique(all_data$participant_id))
 
@@ -42,6 +43,9 @@ short_data <- short_data |>
   ))
 
 short_data$group = as.factor(short_data$group)
+
+
+
 
 
 short_data <- short_data |>
@@ -95,6 +99,9 @@ ggplot(bar_data, aes(x=group, y=mean, fill=group)) +
 
 
 ```
+
+
+
 ```{r}
 bar_data_2 <- short_data |>
   group_by(background_group) |>
@@ -128,9 +135,9 @@ t.test(avg_log_rt ~ group, data = participant_means)
 ```
 
 
-
 ```{r}
 real_bar_data <- short_data |>
+  filter(accuracy == 1) |>
   group_by(background_group) |>
   summarize(
     mean = mean(response_time),
@@ -149,8 +156,9 @@ ggplot(real_bar_data, aes(x=background_group, y=mean, fill=background_group)) +
 ```{r}
 
 grouped_data <- short_data |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
-  summarize(mean_rt = mean(response_time), mean_acc = mean(accuracy)) |>
+  summarize(mean_rt = mean(response_time), mean_acc = mean(accuracy), total_trials = n()) |>
   ungroup()
 
 
@@ -179,7 +187,7 @@ summary(rm_anova)
 ```
 
 ```{r}
-acc_data <- short_data |>
+acc_data <- all_data |>
   group_by(background_group) |>
   summarize(
     mean = mean(accuracy),
@@ -189,15 +197,29 @@ acc_data <- short_data |>
   )
 
 
+
+
+
 ggplot(acc_data, aes(x=background_group, y=mean, fill=background_group)) +
   geom_col() +
   geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
   labs(title = "Stripe Angle Match Accuracy", x="Condition", y= "Accuracy")
 
 
+grouped_data_acc <- all_data |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_rt = mean(response_time), mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_acc$background_group = as.factor(grouped_data_acc$background_group)
+
+
+
+
 acc_anova <- aov_ez(id = "participant_id", 
                    dv = "mean_acc", 
-                   data = grouped_data, 
+                   data = grouped_data_acc, 
                    within = "background_group")
 
 summary(acc_anova)
