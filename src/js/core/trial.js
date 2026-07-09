@@ -95,7 +95,10 @@ function runSingleTrial(
     // }; // dispCircle end
 
 
-    var allPeopleColors = ["red", "orange", "green1", "green2", "green3", "blue1", "blue2", "blue3", "blue4", "blue5", "purple"];
+
+    /* Placement Variables -> See placement.js for calculation of the x,y coordinates */
+
+    var allPeopleColors = ["red", "orange", "green1", "green2", "green3", "blue1", "blue2", "blue3", "blue4", "blue5", "purple", "magenta"];
     var allPeople = shuffle(allPeopleColors);
 
     
@@ -107,12 +110,24 @@ function runSingleTrial(
         };
         htmloutput += `</div>`;
 
+    /* Rotation and Reflection Logic */
+    var poss_trialRotations = [0, 90, 180]; // this one is in degrees!
+
+    var trialRotation = randomChoice(poss_trialRotations, 1)[0];
+
+    var poss_scaling = [1, -1]; //as in transform: scaleX(-1)
+
+    var trialReflection = randomChoice(poss_scaling, 1)[0];
+
+
+    
+    /* Displaying the scene/ trial fxns */
 
     var dispOneThirdScene = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: htmloutput,
         choices: 'NO_KEYS',
-        trial_duration: null, //PERSON_ONE_DISP_TIME,
+        trial_duration: PERSON_ONE_DISP_TIME,
         response_ends_trial: false,
         prompt: `${persistent_prompt}`,
         data: {
@@ -125,8 +140,8 @@ function runSingleTrial(
     var dispHalfScene = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function() {
-            htmloutput.replace(`</div>`, ``);
-            htmloutput += `<img src="${personLeft}" style="width: ${imgPeopleWidth}px; position: absolute; top: 300px; left: 300px; z-index: 999; transform: rotate(180deg);"></img></div>`;
+            htmloutput = htmloutput.replace(`</div>`, ``);
+            htmloutput += `<img src="${personLeft}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.18-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.25-(imgPeopleWidth/2)}px; z-index: 999; transform: rotate(180deg);"></img></div>`;
             return htmloutput;
         },
         choices: 'NO_KEYS',
@@ -143,22 +158,11 @@ function runSingleTrial(
 
     var dispFullScene = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; transform: rotate(${rotation}deg); transform-origin: center-center;">        
-                <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
-        </div>
-        <div style="position: absolute; top: ${h/2-imgBackHeight/2}px; left: ${w/2-imgBackWidth/2}px;">
-            <div style="position: absolute; transform: rotate(${rotation}deg); transform-origin: center-center;">
-                <div style="position: relative; top: 0px; left: 0px;">
-                        <img src="${stimFolder}background_${group}.png" style="width: ${imgBackWidth}px; display: block;"> </img>
-                </div>
-                <div style="position: absolute; top: ${imgBackHeight*.08-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.15-(imgPeopleWidth/2)}px; transform: rotate(180deg);">
-                        <img src="${personLeft}" style="width: ${imgPeopleWidth}px;"></img>
-                </div>
-                <div style="position: absolute; top: ${imgBackHeight*.92-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.75-(imgPeopleWidth/2)}px;">
-                        <img src="${personRight}" style="width: ${imgPeopleWidth}px;"></img>
-                </div>
-            </div>            
-        </div>`, // end stimulus
+        stimulus: function() {
+            htmloutput = htmloutput.replace(`</div>`, ``);
+            htmloutput += `<img src="${personRight}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*1.03-(imgPeopleHeight/2)}px; left: ${imgBackWidth*0.95-(imgPeopleWidth/2)}px;"></img></div>`
+            return htmloutput;
+        },
         choices: ['f', 'j'],
         trial_duration: null,
         response_ends_trial: true,
@@ -166,7 +170,8 @@ function runSingleTrial(
         data: {
             trial_category: 'answer'+trialType,
             // trial_stimulus: thisStim,
-            trial_rotation: rotation,
+            trial_rotation: trialRotation,
+            shapes_rotation: rotation,
             stripe_angle_top: stripe_angle_top,
             stripe_angle_bottom: stripe_angle_top-difficulty,
             difficulty: difficulty,
@@ -196,6 +201,9 @@ function runSingleTrial(
         } // on finish end
     }; // dispScene
 
+    console.log("stripe:", imgStripePeopleWidth, "people:", imgPeopleWidth);
+
+
     // var prestim = {
     //     type: jsPsychHtmlKeyboardResponse,
     //     stimulus: `<div> gray box</div>`,
@@ -212,7 +220,7 @@ function runSingleTrial(
         stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; top: 50%; left: 50%; transform: translate(-50%, -50%);">        
                 <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
         </div>
-        <div style="position: absolute; top: ${h/2}px; left: ${w/2}px; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,
         prompt: `${persistent_prompt}`,
         choices: "NO_KEYS",
         trial_duration: FIXATION_DISP_TIME,
@@ -239,9 +247,9 @@ function runSingleTrial(
     timelineTrialsToPush.push(cursor_off);
     // timelineTrialsToPush.push(prestim);
     timelineTrialsToPush.push(fixation); 
-    timelineTrialsToPush.push(dispOneThirdScene);
+    timelineTrialsToPush.push(dispOneThirdScene); 
     timelineTrialsToPush.push(dispHalfScene); 
-    //timelineTrialsToPush.push(dispFullScene); NEW
+    timelineTrialsToPush.push(dispFullScene); 
     // timelineTrialsToPush.push(dispCircleSlider); // if you wanted to use the slider reproduction measurement tool
     timelineTrialsToPush.push(cursor_on);
 

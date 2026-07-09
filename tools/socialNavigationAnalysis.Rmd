@@ -234,8 +234,14 @@ pairs(acc_hoc, adjust = "tukey")
 
 ```
 
+```{r}
+short_data$trial_rotation = as.factor(short_data$trial_rotation)
 
+short_data |>
+  group_by(trial_rotation) |>
+  summarize(count = n())
 
+```
 
 
 
