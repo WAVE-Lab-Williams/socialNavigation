@@ -226,10 +226,10 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_stripe_angles = [20, 30, 40];
+var poss_stripe_angles = [30, 40];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
-var poss_rotations = [0, Math.PI/4 ,Math.PI/2, Math.PI];
+var poss_rotations = [0, Math.PI/2, Math.PI];
 var poss_groups = ["H_H","H_L","L_H","L_L"]; // H -> High Mobility; L -> Low Mobility
 
 var factors = {
@@ -240,8 +240,8 @@ var factors = {
     group: poss_groups,
 }
 
-var full_design = jsPsych.randomization.factorial(factors, 2);
-console.log(full_design);
+var full_design = jsPsych.randomization.factorial(factors, 1);
+console.log(full_design.length);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
 for (var i = 0; i < poss_stripe_angles.length; i++) {
