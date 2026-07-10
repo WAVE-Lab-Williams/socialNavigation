@@ -95,21 +95,6 @@ function runSingleTrial(
     // }; // dispCircle end
 
 
-
-    /* Placement Variables -> See placement.js for calculation of the x,y coordinates */
-
-    var allPeopleColors = ["red", "orange", "green1", "green2", "green3", "blue1", "blue2", "blue3", "blue4", "blue5", "purple", "magenta"];
-    var allPeople = shuffle(allPeopleColors);
-
-    
-    all_points = calcPlacements(CENTROIDS, rotation);
-
-    var htmloutput = `<div style= "width: 600px; height: 600px; position: absolute; top: 50%; left: 50%; z-index: -999; transform: translate(-50%, -50%);"><img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></img>`;
-        for(var i = 0; i < all_points.length; i++) {
-            htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`
-        };
-        htmloutput += `</div>`;
-
     /* Rotation and Reflection Logic */
     var poss_trialRotations = [0, 90, 180]; // this one is in degrees!
 
@@ -120,7 +105,46 @@ function runSingleTrial(
     var trialReflection = randomChoice(poss_scaling, 1)[0];
 
 
+    /* Placement Variables -> See placement.js for calculation of the x,y coordinates */
+
+    /* COLORS FOR REFERENCE: "red", "orange", "green1", "green2", "green3",
+     "blue1", "blue2", "blue3", "blue4", "blue5", "purple", "magenta" */
     
+    
+    var allPeople = shuffle(allPeopleColors);
+
+    
+    all_points = calcPlacements(CENTROIDS, rotation);
+    console.log("intended group:", group);
+
+    var htmloutput = `<div style= "width: 600px; height: 600px; position: absolute; top: 50%; left: 50%; z-index: -999; transform: translate(-50%, -50%) rotate(${trialRotation}deg) scaleX(${trialReflection});"><img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></img>`;
+        for(var i = 0; i < all_points.length; i++) {
+            if(group === "H_H") { //note the triple equals is on purpose (apparently it's the js version of .equals?)
+                htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+            };
+            if(group === "H_L") {
+                if(i <= 2) {
+                    htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                } else {
+                    htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                }
+            };
+            if(group === "L_H") {
+                if(i <= 2) {
+                    htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                } else {
+                    htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                }
+            };
+            if(group === "L_L") {
+                htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+            };
+        }; // end for loop!
+        htmloutput += `</div>`;
+
+
+
+
     /* Displaying the scene/ trial fxns */
 
     var dispOneThirdScene = {
@@ -172,6 +196,7 @@ function runSingleTrial(
             // trial_stimulus: thisStim,
             trial_rotation: trialRotation,
             shapes_rotation: rotation,
+            trial_reflection: trialReflection,
             stripe_angle_top: stripe_angle_top,
             stripe_angle_bottom: stripe_angle_top-difficulty,
             difficulty: difficulty,
@@ -201,7 +226,7 @@ function runSingleTrial(
         } // on finish end
     }; // dispScene
 
-    console.log("stripe:", imgStripePeopleWidth, "people:", imgPeopleWidth);
+
 
 
     // var prestim = {
@@ -217,7 +242,7 @@ function runSingleTrial(
 
     var fixation = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; top: 50%; left: 50%; transform: translate(-50%, -50%);">        
+        stimulus: `<div style="position: absolute; top: ${h/2-imgBorderHeight/2}px; left: ${w/2-imgBorderWidth/2}px; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(${trialRotation}deg) scaleX(${trialReflection});">        
                 <img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; display:block;"></img> 
         </div>
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:60px; z-index:2">+</div>`,

@@ -83,7 +83,7 @@ function calcPlacements(centroids, SPIN_ANGLE) {
     p6.r = (Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + randomIntFromRange(-25, 25) + angle_offset;
 
 
-    return [p1, p2, p3, p4, p5, p6]
+    return [p1, p2, p3, p4, p5, p6];
 }; //end calcPlacements
      
 

@@ -230,7 +230,7 @@ var poss_stripe_angles = [20, 30, 40];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
 var poss_rotations = [0, Math.PI/4 ,Math.PI/2, Math.PI];
-var poss_groups = ["3_5","5_3","5_5","3_3"];
+var poss_groups = ["H_H","H_L","L_H","L_L"]; // H -> High Mobility; L -> Low Mobility
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
@@ -247,8 +247,9 @@ console.log(full_design);
 for (var i = 0; i < poss_stripe_angles.length; i++) {
      forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]}.png`);
 }
-for (var i = 0; i < poss_groups.length; i++) {
-     forPreload.push(`${stimFolder}background_${poss_groups[i]}.png`);
+for (var i = 0; i < 11; i++) { //allPeopleColors is an array of size 12 (hence 11) BUT it is instantiated in trial.js (after timeline.js in index.html) thus this must be hard-coded :)
+     forPreload.push(`${stimFolder}${allPeopleColors[i]}.png`);
+     forPreload.push(`${stimFolder}/sitting/${allPeopleColors[i]}.png`);
 }
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
