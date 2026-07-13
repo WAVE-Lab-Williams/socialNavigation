@@ -226,36 +226,37 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_stripe_angles = [20, 30, 40];
+var poss_stripe_angles = [30, 40];
 var poss_identical = [true, false];
-var poss_difficulty = [20]
-var poss_rotations = [0 ,90, 180];
-var poss_groups = ["3_5","5_3","5_5","3_3"]
+var poss_difficulty = [20];
+var poss_rotations = [0, Math.PI/2, Math.PI];
+var poss_groups = ["H_H","H_L","L_H","L_L"]; // H -> High Mobility; L -> Low Mobility
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
-    //rotation: poss_rotations,
+    rotation: poss_rotations,
     identical: poss_identical,
     difficulty: poss_difficulty,
     group: poss_groups,
 }
 
-var full_design = jsPsych.randomization.factorial(factors, 2);
-console.log(full_design);
+var full_design = jsPsych.randomization.factorial(factors, 1);
+console.log(full_design.length);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
 for (var i = 0; i < poss_stripe_angles.length; i++) {
      forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]}.png`);
 }
-for (var i = 0; i < poss_groups.length; i++) {
-     forPreload.push(`${stimFolder}background_${poss_groups[i]}.png`);
+for (var i = 0; i < 11; i++) { //allPeopleColors is an array of size 12 (hence 11) BUT it is instantiated in trial.js (after timeline.js in index.html) thus this must be hard-coded :)
+     forPreload.push(`${stimFolder}${allPeopleColors[i]}.png`);
+     forPreload.push(`${stimFolder}/sitting/${allPeopleColors[i]}.png`);
 }
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
         full_design[elem].stripe_angle_top,
-        //full_design[elem].rotation,
+        full_design[elem].rotation,
         full_design[elem].identical,
         full_design[elem].difficulty,
         full_design[elem].group,
