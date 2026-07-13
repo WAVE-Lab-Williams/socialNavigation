@@ -21,7 +21,7 @@ var LEFT_CENTROID = [165, 230];
 var RIGHT_CENTROID = [435, 380];
 var CENTROIDS = [LEFT_CENTROID, RIGHT_CENTROID];
 var RADIUS = 65; 
-var allPeopleColors = ["red", "orange", "green1", "green2", "green3", "blue1", "blue2", "blue3", "blue4", "blue5", "purple", "magenta"];
+var allPeopleColors = ["red", "orange1", "orange2", "green1", "green3", "blue2", "blue3", "blue4", "blue5", "purple", "magenta", "pink"];
 
 // Variables for Participant Information
 var estTotalRunTime = 5;

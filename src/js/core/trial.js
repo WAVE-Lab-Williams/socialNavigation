@@ -107,8 +107,7 @@ function runSingleTrial(
 
     /* Placement Variables -> See placement.js for calculation of the x,y coordinates */
 
-    /* COLORS FOR REFERENCE: "red", "orange", "green1", "green2", "green3",
-     "blue1", "blue2", "blue3", "blue4", "blue5", "purple", "magenta" */
+    /* COLORS FOR REFERENCE: "red", "orange1", "orange2" "green1", "green3", "blue2", "blue3", "blue4", "blue5", "purple", "magenta", "pink" */
     
     
     var allPeople = shuffle(allPeopleColors);
