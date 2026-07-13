@@ -15,8 +15,13 @@ var runPreload = true;
 // Defining Core Variables that remain constant
 // var PRESTIM_DISP_TIME = 800;
 var FIXATION_DISP_TIME = 600;
-var BACKGROUND_DISP_TIME = 200;
-var PERSON_ONE_DISP_TIME = 300;
+var BACKGROUND_DISP_TIME = 300; //now +100 7/9/26
+var PERSON_ONE_DISP_TIME = 400; //now +100 7/9/26
+var LEFT_CENTROID = [165, 230];
+var RIGHT_CENTROID = [435, 380];
+var CENTROIDS = [LEFT_CENTROID, RIGHT_CENTROID];
+var RADIUS = 65; 
+var allPeopleColors = ["red", "orange1", "orange2", "green1", "green3", "blue2", "blue3", "blue4", "blue5", "purple", "magenta", "pink"];
 
 // Variables for Participant Information
 var estTotalRunTime = 5;
@@ -55,20 +60,25 @@ var origPeopleWidth = 612;
 var origPeopleHeight = 612;
 var origBorderWidth = 650;
 var origBorderHeight = 650;
-
+var origStripeWidth = 1577;
+var origStripeHeight = 931;
 
 if (h < 400) {
     var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 50; // your desired display img width
+    var imgPeopleWidth = 55; // your desired display img width
 } else {
     var imgBackWidth = 500; // your desired display img width
-    var imgPeopleWidth = 62; // your desired display img width
+    var imgPeopleWidth = 65; // your desired display img width
 }
-    var scalingBackRatio = (imgBackWidth / origBackWidth)
-    var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth)
+    var scalingBackRatio = (imgBackWidth / origBackWidth);
+    var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth);
+    var scalingStripeRatio = (imgPeopleWidth / origStripeWidth);
 
     var imgBackHeight = scalingBackRatio * origBackHeight;
     var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
     var imgBorderHeight = scalingBackRatio  * origBorderHeight
     var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
     var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
+
+    var imgStripePeopleWidth = scalingStripeRatio * origStripeWidth;
+    var imgStripePeopleHeight = scalingStripeRatio * origStripeHeight;
