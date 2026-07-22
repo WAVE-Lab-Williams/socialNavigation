@@ -164,7 +164,7 @@ function runSingleTrial(
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function() {
             htmloutput = htmloutput.replace(`</div>`, ``);
-            htmloutput += `<img src="${personLeft}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.18-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.25-(imgPeopleWidth/2)}px; z-index: 999; transform: rotate(180deg);"></img></div>`;
+            htmloutput += `<img src="${personLeft}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.18-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.55-(imgPeopleWidth/2)}px; z-index: 999; transform: rotate(180deg);"></img></div>`;
             return htmloutput;
         },
         choices: 'NO_KEYS',
@@ -183,7 +183,7 @@ function runSingleTrial(
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function() {
             htmloutput = htmloutput.replace(`</div>`, ``);
-            htmloutput += `<img src="${personRight}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*1.03-(imgPeopleHeight/2)}px; left: ${imgBackWidth*0.95-(imgPeopleWidth/2)}px;"></img></div>`
+            htmloutput += `<img src="${personRight}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*1.03-(imgPeopleHeight/2)}px; left: ${imgBackWidth*0.65-(imgPeopleWidth/2)}px;"></img></div>`
             return htmloutput;
         },
         choices: ['f', 'j'],
