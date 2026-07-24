@@ -230,7 +230,7 @@ var poss_stripe_angles = [30, 40];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
 var poss_rotations = [0, Math.PI/2, Math.PI];
-var poss_groups = ["H_H","H_L","L_H","L_L"]; // H -> High Mobility; L -> Low Mobility
+var poss_groups = ["allStanding","allSitting","halfHorizontal","halfVertical"]; // for halves -> top row = standing, left column = sititng (will be balanced by reflection & rotation)
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
@@ -241,7 +241,7 @@ var factors = {
 }
 
 var full_design = jsPsych.randomization.factorial(factors, 1);
-console.log(full_design.length);
+//console.log(full_design.length);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
 for (var i = 0; i < poss_stripe_angles.length; i++) {
