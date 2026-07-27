@@ -246,10 +246,13 @@ console.log(full_design.length);
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
 for (var i = 0; i < poss_stripe_angles.length; i++) {
      forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]}.png`);
+     for (var j = 0; j < poss_difficulty.length; j++) {
+          forPreload.push(`${stimFolder}person_${poss_stripe_angles[i]-poss_difficulty[j]}.png`);
+     }
 }
-for (var i = 0; i < 11; i++) { //allPeopleColors is an array of size 12 (hence 11) BUT it is instantiated in trial.js (after timeline.js in index.html) thus this must be hard-coded :)
+for (var i = 0; i < allPeopleColors.length; i++) { // used to be hardcoded, but because allPeopleColors is defined in params.js, which is laoded before timeline.js, we are good.
      forPreload.push(`${stimFolder}${allPeopleColors[i]}.png`);
-     forPreload.push(`${stimFolder}/sitting/${allPeopleColors[i]}.png`);
+     forPreload.push(`${stimFolder}sitting/${allPeopleColors[i]}.png`);
 }
 
 /* ------- timeline expt push (*pushExpt ) -------------- */
