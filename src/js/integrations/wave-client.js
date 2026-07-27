@@ -139,6 +139,8 @@ function processTrialData(data) {
             response_time: data.rt,
             accuracy: data.thisAcc,
             trial_rotation: data.trial_rotation,
+            shapes_rotation: data.rotation,
+            trial_reflection: data.trial_reflection,
             stripe_angle_top: data.stripe_angle_top,
             stripe_angle_bottom: data.stripe_angle_bottom,
             difficulty: data.difficulty,
