@@ -11,10 +11,15 @@ setwd("C:/Users/mcpro/OneDrive/Documents/WAVE LAB/Code/socialNavigation/tools")
 
 library(tidyverse)
 library(paletteer)
+library(afex)
+library(emmeans)
+library(purrr)
+library(jsonlite)
 ```
 
 ```{r}
 all_data <- read.csv("data/dataframe_answer.csv", header=TRUE)
+debrief_data <- read.csv("data/dataframe_debrief.csv", header=TRUE)
 
 #delete all test data
 
@@ -22,75 +27,79 @@ all_data <- all_data |>
   filter(participant_id != "{{%PROLIFIC_PID%}}") |>
   filter(!str_detect(participant_id, "no_query_worker"))
 
-length(unique(all_data$participant_id))
-
+debrief_data <- debrief_data |>
+  filter(participant_id != "{{%PROLIFIC_PID%}}") |>
+  filter(!str_detect(participant_id, "no_query_worker")) 
+ 
 uniq <- unique(all_data$participant_id)
 uniq
 
 length(uniq)
 ```
+```{r}
+to_remove_debrief_by_id <- debrief_data |>
+  group_by(participant_id) |>
+  mutate(response_parsed = map(response, fromJSON)) |>
+  hoist(response_parsed, attention = "attention") |>
+  mutate(attention = as.numeric(attention)) |>
+  filter(attention < 85)
+
+to_remove <- to_remove_debrief_by_id$participant_id
+
+all_data_clean <- all_data |>
+  filter(!participant_id %in% to_remove)
+
+cat("Participants removed:", nrow(to_remove_debrief_by_id))
+```
+
 
 
 ```{r}
+shorter_data <- all_data_clean |>
+  select(participant_id, trial_number, response, response_time, accuracy, trial_rotation, trial_reflection, stripe_angle_top, stripe_angle_bottom, background_group, identical)
 
-
-short_data <- all_data |>
-  select(participant_id, response, response_time, accuracy, trial_rotation, stripe_angle_top, stripe_angle_bottom, background_group, identical)
-
-df_gb_pid <- short_data |>
+grouped_by_pid <- shorter_data |>
   group_by(participant_id) |>
   summarize(num_trials = n(),
             meanRT = mean(response_time),
             sdRT = sd(response_time))
-#note: we didn't filter out people who didn't do enough trials here
-
-
-
-
-grand_meanRT <- mean(df_gb_pid$meanRT)
-grand_sdRT <- sd(df_gb_pid$meanRT)
+  
+grand_meanRT <- mean(grouped_by_pid$meanRT)
+grand_sdRT <- sd(grouped_by_pid$meanRT)
 
 sd_threshold <- 2.0
 
 upper_bound <- grand_meanRT + sd_threshold * grand_sdRT
 lower_bound <- grand_meanRT - sd_threshold * grand_sdRT
 
-df_gb_pid <- df_gb_pid |>
+grouped_by_pid <- grouped_by_pid |>
   filter(num_trials > 45) |> ## change num as needed
   filter(meanRT < upper_bound & meanRT > lower_bound)
 
 
-good_participants <- df_gb_pid$participant_id
-
-#nrow(all_data) - nrow(short_data) #num rows removed
+good_participants <- grouped_by_pid$participant_id
 ```
 
+
 ```{r}
-#excludes individual trials that are X sd from a given participant's mean RT
+good_clean_data <- shorter_data |>
+  filter(participant_id %in% good_participants)
 
-raw_good_data <- short_data |>
-  filter(participant_id %in% good_participants) 
-# 
-# middle_df <- df_gb_pid |>
-#   select(participant_id, meanRT)
-  
-individual_trial_sd_threshold <- 2
+individual_trial_sd_threshold <- 2.0
 
-fused_ind_exclude <- left_join(raw_good_data, df_gb_pid,
+fused_ind_exclude <- left_join(good_clean_data, grouped_by_pid,
               by = "participant_id") |>
   filter(response_time > meanRT - individual_trial_sd_threshold * sdRT & response_time < meanRT + individual_trial_sd_threshold * sdRT)
 
 
-  
-
-
-
 ```
 
 
 
+
 ```{r}
-real_bar_data <- short_data |>
+
+rt_by_group <- fused_ind_exclude |> 
   filter(accuracy == 1) |>
   group_by(background_group) |>
   summarize(
@@ -100,48 +109,41 @@ real_bar_data <- short_data |>
     se = sd/sqrt(n)
   )
 
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
 
-ggplot(real_bar_data, aes(x=background_group, y=mean, fill=background_group)) +
-  geom_col() +
-  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) + 
-  labs(title = "Task Reaction Times", x = "Condition", y = "Reaction time, ms")
+
 
 ```
-```{r}
 
-grouped_data <- short_data |>
-  filter(accuracy == 1) |>
+```{r}
+grouped_data_RT <- fused_ind_exclude |>
   group_by(participant_id, background_group) |>
-  summarize(mean_rt = mean(response_time), mean_acc = mean(accuracy), total_trials = n()) |>
+  summarize(meanRT = mean(response_time)) |>
   ungroup()
 
-
-grouped_data$background_group = as.factor(grouped_data$background_group)
-
-diff_groups_anova <- aov(mean_rt ~ background_group + Error(participant_id/background_group), data=grouped_data)
-
-summary(diff_groups_anova)
-
-library(emmeans)
-post_hoc <- emmeans(diff_groups_anova, ~background_group)
-
-pairs(post_hoc, adjust = "tukey")
-
-```
-```{r}
-library(afex)
-
-rm_anova <- aov_ez(id = "participant_id", 
-                   dv = "mean_rt", 
-                   data = grouped_data, 
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
                    within = "background_group")
 
-summary(rm_anova)
+summary(RT_anova)
 
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
 ```
 
+
 ```{r}
-acc_data <- all_data |>
+
+accuracy_data <- fused_ind_exclude |>
   group_by(background_group) |>
   summarize(
     mean = mean(accuracy),
@@ -150,52 +152,544 @@ acc_data <- all_data |>
     se = sd/sqrt(n)
   )
 
-
-
-
-
-ggplot(acc_data, aes(x=background_group, y=mean, fill=background_group)) +
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
   geom_col() +
   geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
-  labs(title = "Stripe Angle Match Accuracy", x="Condition", y= "Accuracy")
+  labs(title = "Stripe Angle Match Accuracy by Background Group", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
 
 
-grouped_data_acc <- all_data |>
+grouped_data_accuracy <- fused_ind_exclude |>
   group_by(participant_id, background_group) |>
-  summarize(mean_rt = mean(response_time), mean_acc = mean(accuracy)) |>
+  summarize(mean_acc = mean(accuracy)) |>
   ungroup()
 
 
-grouped_data_acc$background_group = as.factor(grouped_data_acc$background_group)
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
 
-
-
-
-acc_anova <- aov_ez(id = "participant_id", 
+accuracy_anova <- aov_ez(id = "participant_id", 
                    dv = "mean_acc", 
-                   data = grouped_data_acc, 
+                   data = grouped_data_accuracy, 
                    within = "background_group")
 
-summary(acc_anova)
+summary(accuracy_anova)
 
-library(emmeans)
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
 
-acc_hoc <- emmeans(acc_anova, ~background_group)
+pairs(accuracy_hoc, adjust = "tukey")
 
-pairs(acc_hoc, adjust = "tukey")
+
+```
+
+```{r}
+
+rt_by_rotation <- fused_ind_exclude |> 
+  filter(accuracy == 1) |>
+  group_by(trial_rotation) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_rotation, aes(x=trial_rotation, y=mean, fill=trial_rotation)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Rotation", x="Rotation, Degrees", y="Reaction Time, ms")
+
+
+rt_by_reflection <- fused_ind_exclude |> 
+  filter(accuracy == 1) |>
+  group_by(trial_reflection) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_reflection, aes(x=trial_reflection, y=mean, fill=trial_reflection)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Reflection", x="Reflection", y="Reaction Time, ms")
 
 
 
 ```
 
 ```{r}
-short_data$trial_rotation = as.factor(short_data$trial_rotation)
-
-short_data |>
+accuracy_by_rotation <- fused_ind_exclude |> 
   group_by(trial_rotation) |>
-  summarize(count = n())
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_by_rotation, aes(x=trial_rotation, y=mean, fill=trial_rotation)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Stripe Angle Match Accuracy by Rotation", x="Rotation, Degrees", y="Accuracy")
+
+
+accuracy_by_reflection <- fused_ind_exclude |> 
+  group_by(trial_reflection) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_by_reflection, aes(x=trial_reflection, y=mean, fill=trial_reflection)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Stripe Angle Match Accuracy by Reflection", x="Reflection", y="Accuracy")
+
+
+
+```
+```{r}
+#next: first half second half, all group conditions for each disp_time, trials after attention checks, rotations, reflections?
+
+firstHalf_data <- fused_ind_exclude |>
+  arrange(participant_id, trial_number) |>
+  group_by(participant_id) |>
+  slice_head(prop = 0.5) |>
+  ungroup()
+
+secondHalf_data <- fused_ind_exclude |>
+  arrange(participant_id, trial_number) |>
+  group_by(participant_id) |>
+  slice_tail(prop = 0.5) |>
+  ungroup()
+
+
+
+```
+
+```{r}
+rt_by_group <- firstHalf_data |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, First Half", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+
+```
+
+```{r}
+grouped_data_RT <- firstHalf_data |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+```
+
+```{r} 
+rt_by_group <- secondHalf_data |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Second Half", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+```
+
+
+```{r}
+
+grouped_data_RT <- secondHalf_data |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+```
+
+
+```{r}
+
+accuracy_data <- firstHalf_data |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() +
+  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
+  labs(title = "Stripe Angle Match Accuracy by Background Group, First Half", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
+
+
+grouped_data_accuracy <- firstHalf_data |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
+
+accuracy_anova <- aov_ez(id = "participant_id", 
+                   dv = "mean_acc", 
+                   data = grouped_data_accuracy, 
+                   within = "background_group")
+
+summary(accuracy_anova)
+
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
+
+pairs(accuracy_hoc, adjust = "tukey")
+
+
+```
+
+```{r}
+
+accuracy_data <- secondHalf_data |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() +
+  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
+  labs(title = "Stripe Angle Match Accuracy by Background Group, Second Half", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
+
+
+grouped_data_accuracy <- secondHalf_data |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
+
+accuracy_anova <- aov_ez(id = "participant_id", 
+                   dv = "mean_acc", 
+                   data = grouped_data_accuracy, 
+                   within = "background_group")
+
+summary(accuracy_anova)
+
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
+
+pairs(accuracy_hoc, adjust = "tukey")
+
+
+```
+
+```{r}
+#TIME FOR FAST AND SLOW RESPONDERS
+
+speeds <- fused_ind_exclude |>
+  group_by(participant_id) |>
+  summarize(meanRT = mean(response_time)) |>
+  mutate(
+    response_speed = ifelse(meanRT <= mean(meanRT), "fast", "slow"
+    )
+  ) 
+  
+fused_ind_exclude <- fused_ind_exclude |>
+  left_join(speeds, by = "participant_id")
+
+fused_ind_exclude |>
+  count(response_speed)
+
+```
+
+```{r}
+rt_by_group <- fused_ind_exclude |> 
+  filter(accuracy == 1, response_speed == "fast") |> 
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Fast Responders", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+
+
+
+
+
+```
+```{r}
+accuracy_data <- fused_ind_exclude |>
+  filter(response_speed == "fast") |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() +
+  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
+  labs(title = "Stripe Angle Match Accuracy by Background Group, Fast Responders", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
+
+grouped_data_accuracy <- fused_ind_exclude |>
+  filter(response_speed == "fast") |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
+
+accuracy_anova <- aov_ez(id = "participant_id", 
+                   dv = "mean_acc", 
+                   data = grouped_data_accuracy, 
+                   within = "background_group")
+
+summary(accuracy_anova)
+
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
+
+pairs(accuracy_hoc, adjust = "tukey")
+
+
+```
+
+```{r}
+firstHalf_data_fast <- fused_ind_exclude |>
+  filter(response_speed == "fast") |>
+  arrange(participant_id, trial_number) |>
+  group_by(participant_id) |>
+  slice_head(prop = 0.5) |>
+  ungroup()
+
+secondHalf_data_fast <- fused_ind_exclude |>
+  filter(response_speed == "fast") |>
+  arrange(participant_id, trial_number) |>
+  group_by(participant_id) |>
+  slice_tail(prop = 0.5) |>
+  ungroup()
+
 
 ```
 
 
 
+```{r}
+
+rt_by_group <- firstHalf_data_fast |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, First Half, Fast Responders", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+grouped_data_RT <- firstHalf_data_fast |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+
+```
+
+
+```{r}
+
+rt_by_group <- secondHalf_data_fast |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Second Half, Fast Responders", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+grouped_data_RT <- secondHalf_data_fast |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+```
+
+
+```{r}
+accuracy_data <- firstHalf_data_fast |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() +
+  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
+  labs(title = "Stripe Angle Match Accuracy by Background Group, First Half, Fast Responders", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
+
+
+grouped_data_accuracy <- firstHalf_data_fast |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
+
+accuracy_anova <- aov_ez(id = "participant_id", 
+                   dv = "mean_acc", 
+                   data = grouped_data_accuracy, 
+                   within = "background_group")
+
+summary(accuracy_anova)
+
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
+
+pairs(accuracy_hoc, adjust = "tukey")
+
+
+```
+
+
+```{r}
+accuracy_data <- secondHalf_data_fast |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(accuracy),
+    sd = sd(accuracy),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() +
+  geom_errorbar(aes(ymin= mean - se, ymax = mean + se)) +
+  labs(title = "Stripe Angle Match Accuracy by Background Group, Second Half, Fast Responders", x="Condition", y= "Accuracy") + 
+  scale_fill_paletteer_d("MoMAColors::Budnitz")
+
+
+grouped_data_accuracy <- secondHalf_data_fast |>
+  group_by(participant_id, background_group) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
+
+accuracy_anova <- aov_ez(id = "participant_id", 
+                   dv = "mean_acc", 
+                   data = grouped_data_accuracy, 
+                   within = "background_group")
+
+summary(accuracy_anova)
+
+accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
+
+pairs(accuracy_hoc, adjust = "tukey")
+
+
+```
