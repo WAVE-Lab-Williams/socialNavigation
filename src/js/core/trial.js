@@ -55,7 +55,7 @@ function runSingleTrial(
         var personRight = `${stimFolder}person_${stripe_angle_top-difficulty}.png`
     }
     
-    var persistent_prompt = `<div style="position: fixed; top: 90%; left: 50%; transform: translateX(-50%); text-align: center;">f = same stripes; j = different stripes </div>`;
+    var persistent_prompt = `<div style="position: fixed; top: 90%; left: 10%; transform: translateX(-50%); text-align: center;">f = same stripes<br> j = different stripes </div>`;
 
     /* testing a slider */
     // tarSize = 40;
@@ -113,9 +113,9 @@ function runSingleTrial(
     var allPeople = shuffle(allPeopleColors);
 
     
-    all_points = calcPlacements(CENTROIDS, rotation);
+    all_points = calcPlacements(CENTROIDS, rotation, group);
 
-    "allStanding","allSitting","halfHorizontal","halfVertical"
+    //"allStanding","allSitting","halfHorizontal","halfVertical"
 
 
     /*
@@ -128,10 +128,10 @@ function runSingleTrial(
     
     */
 
-
+    console.log(group);
     var htmloutput = `<div style= "width: 600px; height: 600px; position: absolute; top: 50%; left: 50%; z-index: -999; transform: translate(-50%, -50%) rotate(${trialRotation}deg) scaleX(${trialReflection});"><img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></img>`;
         for(var i = 0; i < all_points.length; i++) {
-            if(group === "allStanding") { //note the triple equals is on purpose (apparently it's the js version of .equals?)
+            if(group === "allStanding" || group === "standingOut") { //note the triple equals is on purpose (apparently it's the js version of .equals?)
                 htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
             };
             if(group === "halfHorizontal") {
@@ -148,7 +148,7 @@ function runSingleTrial(
                     htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
                 }
             };
-            if(group === "allSitting") {
+            if(group === "allSitting" || group === "sittingOut") {
                 htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
             };
         }; // end for loop!

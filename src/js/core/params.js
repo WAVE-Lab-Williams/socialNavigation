@@ -65,22 +65,23 @@ var origBorderHeight = 650;
 var origStripeWidth = 1577;
 var origStripeHeight = 931;
 
-if (h < 400) {
-    var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 55; // your desired display img width
-} else {
-    var imgBackWidth = 700; // your desired display img width
-    var imgPeopleWidth = 85; // your desired display img width
-}
-    var scalingBackRatio = (imgBackWidth / origBackWidth);
-    var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth);
-    var scalingStripeRatio = (imgPeopleWidth / origStripeWidth);
 
-    var imgBackHeight = scalingBackRatio * origBackHeight;
-    var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
-    var imgBorderHeight = scalingBackRatio  * origBorderHeight
-    var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
-    var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
 
-    var imgStripePeopleWidth = scalingStripeRatio * origStripeWidth;
-    var imgStripePeopleHeight = scalingStripeRatio * origStripeHeight;
+var imgBackWidth = 675; // your desired display img width
+var imgPeopleWidth = 85; // your desired display img width
+
+var scalingBackRatio = (imgBackWidth / origBackWidth);
+var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth);
+var scalingStripeRatio = (imgPeopleWidth / origStripeWidth);
+
+var imgBackHeight = scalingBackRatio * origBackHeight;
+var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
+var imgBorderHeight = scalingBackRatio  * origBorderHeight
+var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
+var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
+
+var imgStripePeopleWidth = scalingStripeRatio * origStripeWidth;
+var imgStripePeopleHeight = scalingStripeRatio * origStripeHeight;
+
+var minRequiredWidth = imgBackHeight + 150;
+var minRequiredHeight = imgBackHeight - 110;

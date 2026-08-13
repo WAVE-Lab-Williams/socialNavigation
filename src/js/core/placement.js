@@ -3,7 +3,7 @@
 
 var angle_offset = 90 //inital offset because images already face up
 
-function calcPlacements(centroids, SPIN_ANGLE) {
+function calcPlacements(centroids, SPIN_ANGLE, trial_type) {
     //left triangle
     
     var [a, b] = centroids[0];
@@ -16,7 +16,12 @@ function calcPlacements(centroids, SPIN_ANGLE) {
     p1.Opp = b - p1.y;
     p1.Adj = a - p1.x;
     
-    p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+    if(trial_type.includes("Out")) {
+        p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 180);
+    } else {
+          p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+    }
+    
 
    
 
