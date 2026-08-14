@@ -140,13 +140,13 @@ function runSingleTrial(
             };
             if(group === "halfVertical") {
                 if(i <= 2 || 6 >= i <= 8) {
-                    htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                    htmloutput += `<img src="${stimFolder}sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
                 } else {
                     htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
                 }
             };
             if(group === "allSitting" || group === "sittingOut") {
-                htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
+                htmloutput += `<img src="${stimFolder}sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
             };
         }; // end for loop!
         htmloutput += `</div>`;
