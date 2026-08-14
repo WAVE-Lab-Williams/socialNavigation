@@ -55,7 +55,7 @@ function runSingleTrial(
         var personRight = `${stimFolder}person_${stripe_angle_top-difficulty}.png`
     }
     
-    var persistent_prompt = `<div style="position: fixed; top: 90%; left: 50%; transform: translateX(-50%); text-align: center;">f = same stripes; j = different stripes </div>`;
+    var persistent_prompt = `<div style="position: fixed; top: 90%; left: 10%; transform: translateX(-50%); text-align: center;">f = same stripes<br> j = different stripes </div>`;
 
     /* testing a slider */
     // tarSize = 40;
@@ -97,11 +97,9 @@ function runSingleTrial(
 
     /* Rotation and Reflection Logic */
     var poss_trialRotations = [0, 90, 180]; // this one is in degrees!
-
     var trialRotation = randomChoice(poss_trialRotations, 1)[0];
 
     var poss_scaling = [1, -1]; //as in transform: scaleX(-1)
-
     var trialReflection = randomChoice(poss_scaling, 1)[0];
 
 
@@ -113,9 +111,9 @@ function runSingleTrial(
     var allPeople = shuffle(allPeopleColors);
 
     
-    all_points = calcPlacements(CENTROIDS, rotation);
+    all_points = calcPlacements(CENTROIDS, rotation, group, trialReflection);
 
-    "allStanding","allSitting","halfHorizontal","halfVertical"
+    //"allStanding","allSitting","halfHorizontal","halfVertical"
 
 
     /*
@@ -127,11 +125,10 @@ function runSingleTrial(
     p10 - p12: LOWER RIGHT
     
     */
-
-
+    
     var htmloutput = `<div style= "width: 600px; height: 600px; position: absolute; top: 50%; left: 50%; z-index: -999; transform: translate(-50%, -50%) rotate(${trialRotation}deg) scaleX(${trialReflection});"><img src="${stimFolder}background_border.png" style="width: ${imgBorderWidth}px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></img>`;
         for(var i = 0; i < all_points.length; i++) {
-            if(group === "allStanding") { //note the triple equals is on purpose (apparently it's the js version of .equals?)
+            if(group === "allStanding" || group === "standingOut") { //note the triple equals is on purpose (apparently it's the js version of .equals?)
                 htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
             };
             if(group === "halfHorizontal") {
@@ -148,7 +145,7 @@ function runSingleTrial(
                     htmloutput += `<img src="${stimFolder}${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
                 }
             };
-            if(group === "allSitting") {
+            if(group === "allSitting" || group === "sittingOut") {
                 htmloutput += `<img src="${stimFolder}/sitting/${allPeople[i]}.png" style = "position: absolute; top: ${all_points[i].y}px; left: ${all_points[i].x}px; width: ${imgPeopleWidth}px; transform: translate(-50%, -50%) rotate(${all_points[i].r}deg);"></img>`;
             };
         }; // end for loop!
@@ -177,7 +174,7 @@ function runSingleTrial(
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function() {
             htmloutput = htmloutput.replace(`</div>`, ``);
-            htmloutput += `<img src="${personLeft}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.18-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.55-(imgPeopleWidth/2)}px; z-index: 999; transform: rotate(180deg);"></img></div>`;
+            htmloutput += `<img src="${personLeft}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.005-(imgPeopleHeight/2)}px; left: ${imgBackWidth*.61-(imgPeopleWidth/2)}px; z-index: 999; transform: rotate(180deg);"></img></div>`;
             return htmloutput;
         },
         choices: 'NO_KEYS',
@@ -196,7 +193,7 @@ function runSingleTrial(
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function() {
             htmloutput = htmloutput.replace(`</div>`, ``);
-            htmloutput += `<img src="${personRight}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*1.03-(imgPeopleHeight/2)}px; left: ${imgBackWidth*0.65-(imgPeopleWidth/2)}px;"></img></div>`
+            htmloutput += `<img src="${personRight}" style="width: ${imgStripePeopleWidth}px; position: absolute; top: ${imgBackHeight*.86-(imgPeopleHeight/2)}px; left: ${imgBackWidth*0.275-(imgPeopleWidth/2)}px;"></img></div>`
             return htmloutput;
         },
         choices: ['f', 'j'],

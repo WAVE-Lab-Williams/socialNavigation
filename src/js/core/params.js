@@ -17,12 +17,13 @@ var runPreload = true;
 var FIXATION_DISP_TIME = 600;
 var BACKGROUND_DISP_TIME = 300; //now +100 7/9/26
 var PERSON_ONE_DISP_TIME = 400; //now +100 7/9/26
-var U_LEFT_CENTROID = [175, 200];
+//var U_LEFT_CENTROID = [175, 200];
+var U_LEFT_CENTROID = [300, 300];
 var U_RIGHT_CENTROID = [425, 200];
 var L_LEFT_CENTROID = [175, 400];
 var L_RIGHT_CENTROID = [425, 400];
 var CENTROIDS = [U_LEFT_CENTROID, U_RIGHT_CENTROID, L_LEFT_CENTROID, L_RIGHT_CENTROID];
-var RADIUS = 65; 
+var RADIUS = 100; 
 var allPeopleColors = ["red", "orange1", "orange2", "green1", "green3", "blue2", "blue3", "blue4", "blue5", "purple", "magenta", "pink"];
 // Variables for Participant Information
 var estTotalRunTime = 5;
@@ -64,22 +65,23 @@ var origBorderHeight = 650;
 var origStripeWidth = 1577;
 var origStripeHeight = 931;
 
-if (h < 400) {
-    var imgBackWidth = 400; // your desired display img width
-    var imgPeopleWidth = 55; // your desired display img width
-} else {
-    var imgBackWidth = 500; // your desired display img width
-    var imgPeopleWidth = 65; // your desired display img width
-}
-    var scalingBackRatio = (imgBackWidth / origBackWidth);
-    var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth);
-    var scalingStripeRatio = (imgPeopleWidth / origStripeWidth);
 
-    var imgBackHeight = scalingBackRatio * origBackHeight;
-    var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
-    var imgBorderHeight = scalingBackRatio  * origBorderHeight
-    var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
-    var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
 
-    var imgStripePeopleWidth = scalingStripeRatio * origStripeWidth;
-    var imgStripePeopleHeight = scalingStripeRatio * origStripeHeight;
+var imgBackWidth = 675; // your desired display img width
+var imgPeopleWidth = 85; // your desired display img width
+
+var scalingBackRatio = (imgBackWidth / origBackWidth);
+var scalingPeopleRatio = (imgPeopleWidth / origPeopleWidth);
+var scalingStripeRatio = (imgPeopleWidth / origStripeWidth);
+
+var imgBackHeight = scalingBackRatio * origBackHeight;
+var imgBorderWidth = scalingBackRatio  * origBorderWidth //uses the same scaling factor as imgBack
+var imgBorderHeight = scalingBackRatio  * origBorderHeight
+var imgPeopleHeight = scalingPeopleRatio * origPeopleHeight;
+var imgPeopleWidth = scalingPeopleRatio * origPeopleWidth;
+
+var imgStripePeopleWidth = scalingStripeRatio * origStripeWidth;
+var imgStripePeopleHeight = scalingStripeRatio * origStripeHeight;
+
+var minRequiredWidth = imgBackHeight + 150;
+var minRequiredHeight = imgBackHeight - 110;

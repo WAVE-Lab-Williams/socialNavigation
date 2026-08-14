@@ -230,7 +230,7 @@ var poss_stripe_angles = [30, 40];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
 var poss_rotations = [0, Math.PI/2, Math.PI];
-var poss_groups = ["allStanding","allSitting","halfHorizontal","halfVertical"]; // for halves -> top row = standing, left column = sititng (will be balanced by reflection & rotation)
+var poss_groups = ["allStanding","allSitting", "standingOut", "sittingOut"]; // for halves -> top row = standing, left column = sititng (will be balanced by reflection & rotation)
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
@@ -322,11 +322,39 @@ timelineclose.push(debrief_qs);
 timelineclose.push({ type: jsPsychFullscreen, fullscreen_mode: false });
 timelineclose.push(closing);
 
+
+
 /*
 ===============================================================
 Run Expt (*sec_run)
 ===============================================================
 */
+
+
+var screenTooSmall = w < minRequiredWidth || h < minRequiredHeight;
+
+var screenSizeCheck = {
+    timeline: [{
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        trial_duration: null,
+        stimulus: function() {
+            var returnMessage = (participantType === 'prolific')
+                ? `<p>Otherwise, please return the study on Prolific if you're unable to accomodate the required width.</p>`
+                : `<p>Otherwise, please return the study (or let your experimenter know) if you're unable to accomodate the required width.</p>`;
+            return `<div style="max-width:600px;margin:15vh auto 0 auto;text-align:center;font-size:1.2em;">
+                <p>Your browser window is too small to run this study (needs at least ${minRequiredWidth}x${minRequiredHeight}px, currently ${w}x${h}px).</p>
+                <p>To fix this error, you can <i>maximize your browser window</i> or switch to a larger monitor, <b>then refresh this page</b>!</p>
+                ${returnMessage}
+            </div>`;
+        },
+    }],
+    conditional_function: function () {
+        return screenTooSmall;
+    },
+};
+timelinebase = timelinebase.concat(screenSizeCheck);
+
 
 if (runPreload) {
     var preload = {
