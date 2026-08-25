@@ -21,7 +21,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if(SPIN_ANGLE == Math.PI/2) {
             p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
         } else if (SPIN_ANGLE == Math.PI) {
-            p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) - 17.5);
+            p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 135);
         }
     } else {
         p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
@@ -44,7 +44,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if (SPIN_ANGLE == Math.PI/2) {
             p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + 0);
         } else if(SPIN_ANGLE == Math.PI) {
-            p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+            p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + 35);
         }
     } else {
         p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
@@ -65,7 +65,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if (SPIN_ANGLE == Math.PI/2) {
             p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
         } else if(SPIN_ANGLE == Math.PI) {
-            p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+            p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + 135);
         }
     } else {
         p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
@@ -91,7 +91,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if (SPIN_ANGLE == Math.PI/2) {
             p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
         } else if(SPIN_ANGLE == Math.PI) {
-            p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+            p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + 30);
         }
     } else {
         p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
@@ -112,7 +112,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if (SPIN_ANGLE == Math.PI/2) {
             p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
         } else if(SPIN_ANGLE == Math.PI) {
-            p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+            p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + 137.5);
         }
     } else {
         p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
@@ -134,7 +134,7 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
         } else if (SPIN_ANGLE == Math.PI/2) {
             p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
         } else if(SPIN_ANGLE == Math.PI) {
-            p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
+            p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + 30);
         }
     } else {
         p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
