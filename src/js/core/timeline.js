@@ -229,20 +229,18 @@ EXPERIMENT SECTION (*sec_expt)
 var poss_stripe_angles = [40, 60];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
-var poss_count = [3, 5];
-var poss_rotations = [0, Math.PI];
-var poss_groups = ["allStanding","allSitting", "standingOut", "sittingOut"];
+var poss_rotations = [0]; //,Math.PI];
+var poss_groups = ["allStanding","standingPairs"];
 
 var factors = {
     stripe_angle_top: poss_stripe_angles,
     rotation: poss_rotations,
-    count: poss_count,
     identical: poss_identical,
     difficulty: poss_difficulty,
     group: poss_groups,
 }
 
-var full_design = jsPsych.randomization.factorial(factors, 1);
+var full_design = jsPsych.randomization.factorial(factors, 3); // note 3 to make 48 trials
 //console.log(full_design.length);
 
 /* -------  Set Preload Images for Expt (*preload_expt) -------------- */
@@ -263,7 +261,6 @@ for (var elem = 0; elem < full_design.length; elem++) {
         full_design[elem].stripe_angle_top,
         full_design[elem].rotation,
         full_design[elem].identical,
-        full_design[elem].count,
         full_design[elem].difficulty,
         full_design[elem].group,
         timelineexpt,
