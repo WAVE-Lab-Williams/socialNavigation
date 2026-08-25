@@ -85,26 +85,28 @@ good_participants <- grouped_by_pid$participant_id
 good_clean_data <- shorter_data |>
   filter(participant_id %in% good_participants)
 
-individual_trial_sd_threshold <- 2.0
+individual_trial_sd_threshold <- 2.5
 
 fused_ind_exclude <- left_join(good_clean_data, grouped_by_pid,
               by = "participant_id") |>
   filter(response_time > meanRT - individual_trial_sd_threshold * sdRT & response_time < meanRT + individual_trial_sd_threshold * sdRT)
 
+fused_ind_exclude$trial_rotation = as.factor(fused_ind_exclude$trial_rotation)
+fused_ind_exclude$trial_reflection = as.factor(fused_ind_exclude$trial_reflection)
 
+cat("Valid Participants:", nrow(grouped_by_pid))
 ```
 
 
 
 
 ```{r}
-
 rt_by_group <- fused_ind_exclude |> 
   filter(accuracy == 1) |>
   group_by(background_group) |>
   summarize(
-    mean = mean(response_time),
-    sd = sd(response_time),
+    mean = mean(meanRT),
+    sd = sd(meanRT),
     n = n(),
     se = sd/sqrt(n)
   )
@@ -112,22 +114,22 @@ rt_by_group <- fused_ind_exclude |>
 ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
   geom_col() + 
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
-  labs(title= "Task Reaction Time by Background Group", x="Conditon", y="Reaction Time, ms") +
+  labs(title= "Task Reaction Time by Background Group, Filtered", x="Conditon", y="Reaction Time, ms") +
   scale_fill_paletteer_d("MetBrewer::Austria")
 
 
 
 ```
 
+
 ```{r}
 grouped_data_RT <- fused_ind_exclude |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
   summarize(meanRT = mean(response_time)) |>
   ungroup()
 
-grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
-  
-  
+
 RT_anova <- aov_ez(id = "participant_id",
                    dv = "meanRT",
                    data = grouped_data_RT,
@@ -135,9 +137,10 @@ RT_anova <- aov_ez(id = "participant_id",
 
 summary(RT_anova)
 
-RT_hoc <- emmeans(RT_anova, ~background_group)
+emmeans(RT_anova, pairwise ~ background_group, adjust = "tukey")
 
-pairs(RT_hoc, adjust = "tukey")
+
+
 ```
 
 
@@ -159,24 +162,20 @@ ggplot(accuracy_data, aes(x=background_group, y=mean, fill=background_group)) +
   scale_fill_paletteer_d("MoMAColors::Budnitz")
 
 
-grouped_data_accuracy <- fused_ind_exclude |>
+grouped_data_Acc <- fused_ind_exclude |>
   group_by(participant_id, background_group) |>
-  summarize(mean_acc = mean(accuracy)) |>
+  summarize(meanAcc = mean(accuracy)) |>
   ungroup()
 
 
-grouped_data_accuracy$background_group = as.factor(grouped_data_accuracy$background_group)
-
-accuracy_anova <- aov_ez(id = "participant_id", 
-                   dv = "mean_acc", 
-                   data = grouped_data_accuracy, 
+acc_anova <- aov_ez(id = "participant_id",
+                   dv = "meanAcc",
+                   data = grouped_data_Acc,
                    within = "background_group")
 
-summary(accuracy_anova)
+summary(acc_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
-
-pairs(accuracy_hoc, adjust = "tukey")
+emmeans(acc_anova, pairwise ~ background_group, adjust = "tukey")
 
 
 ```
@@ -196,7 +195,7 @@ rt_by_rotation <- fused_ind_exclude |>
 ggplot(rt_by_rotation, aes(x=trial_rotation, y=mean, fill=trial_rotation)) +
   geom_col() + 
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
-  labs(title= "Task Reaction Time by Rotation", x="Rotation, Degrees", y="Reaction Time, ms")
+  labs(title= "Task Reaction Time by Rotation, Filtered", x="Rotation, Degrees", y="Reaction Time, ms")
 
 
 rt_by_reflection <- fused_ind_exclude |> 
@@ -219,6 +218,31 @@ ggplot(rt_by_reflection, aes(x=trial_reflection, y=mean, fill=trial_reflection))
 ```
 
 ```{r}
+#anova on rt by rotation: 
+
+grouped_data_RT <- fused_ind_exclude |>
+  filter(accuracy == 1) |>
+  group_by(participant_id, trial_rotation) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$trial_rotation = as.factor(grouped_data_RT$trial_rotation)
+
+
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "trial_rotation")
+
+summary(RT_anova)
+
+emmeans(RT_anova, pairwise ~ trial_rotation, adjust = "tukey")
+
+
+```
+
+
+```{r}
 accuracy_by_rotation <- fused_ind_exclude |> 
   group_by(trial_rotation) |>
   summarize(
@@ -231,7 +255,7 @@ accuracy_by_rotation <- fused_ind_exclude |>
 ggplot(accuracy_by_rotation, aes(x=trial_rotation, y=mean, fill=trial_rotation)) +
   geom_col() + 
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
-  labs(title= "Stripe Angle Match Accuracy by Rotation", x="Rotation, Degrees", y="Accuracy")
+  labs(title= "Stripe Angle Match Accuracy by Rotation, Filitered", x="Rotation, Degrees", y="Accuracy")
 
 
 accuracy_by_reflection <- fused_ind_exclude |> 
@@ -251,6 +275,52 @@ ggplot(accuracy_by_reflection, aes(x=trial_reflection, y=mean, fill=trial_reflec
 
 
 ```
+
+```{r}
+#what does the anova look like (for trial rotation)?
+grouped_data_accuracy <- fused_ind_exclude |>
+  group_by(participant_id, trial_rotation) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$trial_rotation = as.factor(grouped_data_accuracy$trial_rotation)
+
+accuracy_anova <- aov_ez(id = "participant_id",
+                   dv = "mean_acc",
+                   data = grouped_data_accuracy,
+                   within = "trial_rotation")
+
+summary(accuracy_anova)
+
+emmeans(accuracy_anova, pairwise ~ trial_rotation, adjust = "tukey")
+
+
+```
+```{r}
+#what about reflection?
+grouped_data_accuracy <- fused_ind_exclude |>
+  group_by(participant_id, trial_reflection) |>
+  summarize(mean_acc = mean(accuracy)) |>
+  ungroup()
+
+
+grouped_data_accuracy$trial_reflection = as.factor(grouped_data_accuracy$trial_reflection)
+
+accuracy_anova <- aov_ez(id = "participant_id",
+                   dv = "mean_acc",
+                   data = grouped_data_accuracy,
+                   within = "trial_reflection")
+
+summary(accuracy_anova)
+
+emmeans(accuracy_anova, pairwise ~ trial_reflection, adjust = "tukey")
+
+
+```
+
+
+
 ```{r}
 #next: first half second half, all group conditions for each disp_time, trials after attention checks, rotations, reflections?
 
@@ -292,6 +362,7 @@ ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
 
 ```{r}
 grouped_data_RT <- firstHalf_data |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
   summarize(meanRT = mean(response_time)) |>
   ungroup()
@@ -306,9 +377,7 @@ RT_anova <- aov_ez(id = "participant_id",
 
 summary(RT_anova)
 
-RT_hoc <- emmeans(RT_anova, ~background_group)
-
-pairs(RT_hoc, adjust = "tukey")
+emmeans(RT_anova, pairwise ~ background_group, adjust = "tukey")
 ```
 
 ```{r} 
@@ -334,6 +403,7 @@ ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
 ```{r}
 
 grouped_data_RT <- secondHalf_data |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
   summarize(meanRT = mean(response_time)) |>
   ungroup()
@@ -348,9 +418,7 @@ RT_anova <- aov_ez(id = "participant_id",
 
 summary(RT_anova)
 
-RT_hoc <- emmeans(RT_anova, ~background_group)
-
-pairs(RT_hoc, adjust = "tukey")
+emmeans(RT_anova, pairwise ~ background_group, adjust = "tukey")
 ```
 
 
@@ -387,9 +455,7 @@ accuracy_anova <- aov_ez(id = "participant_id",
 
 summary(accuracy_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
-
-pairs(accuracy_hoc, adjust = "tukey")
+emmeans(accuracy_anova, pairwise ~ background_group, adjust = "tukey")
 
 
 ```
@@ -427,10 +493,7 @@ accuracy_anova <- aov_ez(id = "participant_id",
 
 summary(accuracy_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
-
-pairs(accuracy_hoc, adjust = "tukey")
-
+emmeans(accuracy_anova, pairwise ~ background_group, adjust = "tukey")
 
 ```
 
@@ -472,8 +535,23 @@ ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
 
 
 
+grouped_data_RT <- fused_ind_exclude |>
+  filter(response_speed == "fast", accuracy == 1) |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
 
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
 
+summary(RT_anova)
+
+emmeans(RT_anova, pairwise ~ background_group, adjust = "tukey")
 
 ```
 ```{r}
@@ -509,10 +587,7 @@ accuracy_anova <- aov_ez(id = "participant_id",
 
 summary(accuracy_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
-
-pairs(accuracy_hoc, adjust = "tukey")
-
+emmeans(accuracy_anova, pairwise ~ background_group, adjust = "tukey")
 
 ```
 
@@ -555,6 +630,7 @@ ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
   scale_fill_paletteer_d("MetBrewer::Austria")
 
 grouped_data_RT <- firstHalf_data_fast |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
   summarize(meanRT = mean(response_time)) |>
   ungroup()
@@ -569,9 +645,7 @@ RT_anova <- aov_ez(id = "participant_id",
 
 summary(RT_anova)
 
-RT_hoc <- emmeans(RT_anova, ~background_group)
-
-pairs(RT_hoc, adjust = "tukey")
+emmeans(RT_anova, pairiwse ~ background_group, adjust = "tukey")
 
 ```
 
@@ -595,6 +669,7 @@ ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
   scale_fill_paletteer_d("MetBrewer::Austria")
 
 grouped_data_RT <- secondHalf_data_fast |>
+  filter(accuracy == 1) |>
   group_by(participant_id, background_group) |>
   summarize(meanRT = mean(response_time)) |>
   ungroup()
@@ -609,9 +684,8 @@ RT_anova <- aov_ez(id = "participant_id",
 
 summary(RT_anova)
 
-RT_hoc <- emmeans(RT_anova, ~background_group)
+emmeans(RT_anova, pairwise ~ background_group, adjust = "tukey")
 
-pairs(RT_hoc, adjust = "tukey")
 ```
 
 
@@ -647,10 +721,7 @@ accuracy_anova <- aov_ez(id = "participant_id",
 
 summary(accuracy_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
-
-pairs(accuracy_hoc, adjust = "tukey")
-
+emmeans(accuracy_anova, pairwise ~ background_group, adjust = "tukey")
 
 ```
 
@@ -687,9 +758,143 @@ accuracy_anova <- aov_ez(id = "participant_id",
 
 summary(accuracy_anova)
 
-accuracy_hoc <- emmeans(accuracy_anova, ~background_group)
 
-pairs(accuracy_hoc, adjust = "tukey")
-
+emmeans(accuracy_anova, pairwise ~ background_group, adjust = "tukey")
 
 ```
+
+
+```{r}
+#RT by group fixed for 90 degrees
+rt_by_group <- fused_ind_exclude |> 
+  filter(accuracy == 1, trial_rotation == 90) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Filtered at 2.5SD, 90 Degree Trials", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+grouped_data_RT <- fused_ind_exclude |>
+  filter(trial_rotation == 90, accuracy == 1) |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+emmeans(RT_anova, pairiwse ~ background_group, adjust = "tukey")
+
+```
+
+
+```{r}
+
+m180_data <- fused_ind_exclude |>
+  filter(trial_rotation == 180, trial_reflection == -1)
+
+p0_data <- fused_ind_exclude |>
+  filter(trial_rotation == 0, trial_reflection == 1)
+
+m180_p0_data <- bind_rows(m180_data, p0_data)
+
+rt_by_group <- m180_p0_data |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Pooled 180Deg x -1 & 0Deg x 1", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+grouped_data_RT <- m180_p0_data |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+```
+
+```{r}
+
+p180_data <- fused_ind_exclude |>
+  filter(trial_rotation == 180, trial_reflection == 1)
+
+m0_data <- fused_ind_exclude |>
+  filter(trial_rotation == 0, trial_reflection == -1)
+
+p180_m0_data <- bind_rows(p180_data, m0_data)
+
+rt_by_group <- p180_m0_data |> 
+  filter(accuracy == 1) |>
+  group_by(background_group) |>
+  summarize(
+    mean = mean(response_time),
+    sd = sd(response_time),
+    n = n(),
+    se = sd/sqrt(n)
+  )
+
+ggplot(rt_by_group, aes(x=background_group, y=mean, fill=background_group)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se)) +
+  labs(title= "Task Reaction Time by Background Group, Pooled 180Deg x 1 & 0Deg x -1", x="Conditon", y="Reaction Time, ms") +
+  scale_fill_paletteer_d("MetBrewer::Austria")
+
+grouped_data_RT <- p180_m0_data |>
+  filter(accuracy == 1) |>
+  group_by(participant_id, background_group) |>
+  summarize(meanRT = mean(response_time)) |>
+  ungroup()
+
+grouped_data_RT$background_group = as.factor(grouped_data_RT$background_group)
+  
+  
+RT_anova <- aov_ez(id = "participant_id",
+                   dv = "meanRT",
+                   data = grouped_data_RT,
+                   within = "background_group")
+#test_anova <- aov(meanRT ~ background_group, data=grouped_data_RT)
+#summary(test_anova)
+
+summary(RT_anova)
+
+RT_hoc <- emmeans(RT_anova, ~background_group)
+
+pairs(RT_hoc, adjust = "tukey")
+```
+

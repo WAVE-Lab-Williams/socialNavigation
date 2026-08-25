@@ -26,8 +26,8 @@ var CENTROIDS = [U_LEFT_CENTROID, U_RIGHT_CENTROID, L_LEFT_CENTROID, L_RIGHT_CEN
 var RADIUS = 100; 
 var allPeopleColors = ["red", "orange1", "orange2", "green1", "green3", "blue2", "blue3", "blue4", "blue5", "purple", "magenta", "pink"];
 // Variables for Participant Information
-var estTotalRunTime = 5;
-var estDollars = 0.75;
+var estTotalRunTime = 7;
+var estDollars = 1.00;
 var participantType = 'prolific';
 var completionCode = 'CZJ72LJV';
 var prolific_url = 'https://app.prolific.co/submissions/complete?cc='+completionCode;
