@@ -4,9 +4,10 @@ PUSHING/RUNNING A CUSTOM SINGLE TRIAL (*singleTrial)
 ===============================================================
 */
 function runSingleTrial(
-    stripe_angle_top,
+    //stripe_angle_top,
     rotation,
     identical,
+    count,
     difficulty,
     group,
     timelineTrialsToPush,
@@ -96,11 +97,13 @@ function runSingleTrial(
 
 
     /* Rotation and Reflection Logic */
-    var poss_trialRotations = [0, 90, 180]; // this one is in degrees!
+    var poss_trialRotations = [0, 180]; // this one is in degrees!
     var trialRotation = randomChoice(poss_trialRotations, 1)[0];
+    var poss_stripe_angles = [40, 60];
 
     var poss_scaling = [1, -1]; //as in transform: scaleX(-1)
     var trialReflection = randomChoice(poss_scaling, 1)[0];
+    var stripe_angle_top = randomChoice(poss_stripe_angles, 1)[0];
 
 
     /* Placement Variables -> See placement.js for calculation of the x,y coordinates */
@@ -109,9 +112,9 @@ function runSingleTrial(
     
     
     var allPeople = shuffle(allPeopleColors);
-
     
-    all_points = calcPlacements(CENTROIDS, rotation, group, trialReflection);
+    
+    all_points = calcPlacements(CENTROIDS, rotation, group, trialReflection, count);
 
     //"allStanding","allSitting","halfHorizontal","halfVertical"
 

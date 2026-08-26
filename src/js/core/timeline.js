@@ -226,15 +226,17 @@ EXPERIMENT SECTION (*sec_expt)
 
 /* -------- defining factors && exptdesign (*factors) --------*/
 
-var poss_stripe_angles = [30, 40];
+//var poss_stripe_angles = [40, 60];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
-var poss_rotations = [0, Math.PI/2, Math.PI];
-var poss_groups = ["allStanding","allSitting", "standingOut", "sittingOut"]; // for halves -> top row = standing, left column = sititng (will be balanced by reflection & rotation)
+var poss_count = [3, 5];
+var poss_rotations = [0, Math.PI];
+var poss_groups = ["allStanding","allSitting", "standingOut", "sittingOut"];
 
 var factors = {
-    stripe_angle_top: poss_stripe_angles,
+   // stripe_angle_top: poss_stripe_angles,
     rotation: poss_rotations,
+    count: poss_count,
     identical: poss_identical,
     difficulty: poss_difficulty,
     group: poss_groups,
@@ -258,9 +260,10 @@ for (var i = 0; i < allPeopleColors.length; i++) { // used to be hardcoded, but 
 /* ------- timeline expt push (*pushExpt ) -------------- */
 for (var elem = 0; elem < full_design.length; elem++) {
     runSingleTrial(
-        full_design[elem].stripe_angle_top,
+        //full_design[elem].stripe_angle_top,
         full_design[elem].rotation,
         full_design[elem].identical,
+        full_design[elem].count,
         full_design[elem].difficulty,
         full_design[elem].group,
         timelineexpt,
