@@ -229,7 +229,7 @@ EXPERIMENT SECTION (*sec_expt)
 var poss_stripe_angles = [40, 60];
 var poss_identical = [true, false];
 var poss_difficulty = [20];
-var poss_rotations = [0, Math.PI];
+var poss_rotations = [(Math.PI/18), (Math.PI/18 + Math.PI)];
 var poss_groups = ["allStanding","standingPairs"];
 
 var factors = {

@@ -5,6 +5,7 @@ var angle_offset = 90 //inital offset because images already face up
 
 function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     //left triangle
+    
     var [a, b] = centroids[0];
 
     const p1 = {};
@@ -16,11 +17,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     p1.Adj = a - p1.x;
     
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 35);
         } else if(SPIN_ANGLE == Math.PI/2) {
             p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
-        } else if (SPIN_ANGLE == Math.PI) {
+        } else if (SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 135);
         }
     } else {
@@ -39,11 +40,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     p2.Adj = a - p2.x;
 
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + 165.5);
         } else if (SPIN_ANGLE == Math.PI/2) {
             p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + 0);
-        } else if(SPIN_ANGLE == Math.PI) {
+        } else if(SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p2.r = ((Math.atan2(p2.Opp, p2.Adj) * (180/Math.PI)) + 35);
         }
     } else {
@@ -60,11 +61,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     p3.Adj = a - p3.x;
 
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + 17.5);
         } else if (SPIN_ANGLE == Math.PI/2) {
             p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
-        } else if(SPIN_ANGLE == Math.PI) {
+        } else if(SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p3.r = ((Math.atan2(p3.Opp, p3.Adj) * (180/Math.PI)) + 135);
         }
     } else {
@@ -86,11 +87,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     p4.Adj = c - p4.x;
     
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + 125);
         } else if (SPIN_ANGLE == Math.PI/2) {
             p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
-        } else if(SPIN_ANGLE == Math.PI) {
+        } else if(SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p4.r = ((Math.atan2(p4.Opp, p4.Adj) * (180/Math.PI)) + 30);
         }
     } else {
@@ -107,11 +108,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
 
 
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + 30);
         } else if (SPIN_ANGLE == Math.PI/2) {
             p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
-        } else if(SPIN_ANGLE == Math.PI) {
+        } else if(SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p5.r = ((Math.atan2(p5.Opp, p5.Adj) * (180/Math.PI)) + 137.5);
         }
     } else {
@@ -129,11 +130,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection) {
     p6.Adj = c - p6.x;
 
     if(trial_type.includes("Pairs")) {
-        if(SPIN_ANGLE == 0) {
+        if(SPIN_ANGLE == ((Math.PI/18))) {
             p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + 137.5);
         } else if (SPIN_ANGLE == Math.PI/2) {
             p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
-        } else if(SPIN_ANGLE == Math.PI) {
+        } else if(SPIN_ANGLE == ((Math.PI/18 + Math.PI))) {
             p6.r = ((Math.atan2(p6.Opp, p6.Adj) * (180/Math.PI)) + 30);
         }
     } else {

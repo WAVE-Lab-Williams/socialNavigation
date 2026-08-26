@@ -112,7 +112,7 @@ function runSingleTrial(
 
     
     all_points = calcPlacements(CENTROIDS, rotation, group, trialReflection);
-
+    
     //"allStanding","standingPairs"
 
 
