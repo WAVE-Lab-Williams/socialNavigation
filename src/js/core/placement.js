@@ -210,11 +210,11 @@ function calcPlacements(centroids, SPIN_ANGLE, trial_type, trial_reflection, gro
         
         if(trial_type.includes("Out")) {
             if(SPIN_ANGLE == 0) {
-                p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 240);
+                p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + 20);
             } else if(SPIN_ANGLE == Math.PI/2) {
                 p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
             } else if (SPIN_ANGLE == Math.PI) {
-                p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) - 80);
+                p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) +150);
             }
         } else {
             p1.r = ((Math.atan2(p1.Opp, p1.Adj) * (180/Math.PI)) + randomIntFromRange(-25,25) + angle_offset);
