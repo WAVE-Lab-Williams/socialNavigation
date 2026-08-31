@@ -267,6 +267,10 @@
    outline: none;
  }
 
+.jspsych-display-element {
+   caret-color: transparent;
+ }
+
  .jspsych-content-wrapper {
    display: flex;
    margin: auto;

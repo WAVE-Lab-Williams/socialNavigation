@@ -120,6 +120,15 @@ var id = {
     button_label: ['Submit'],
     data: { trial_category: 'id_info' },
     on_finish: function (data) {
+        // Prevent a stray blinking text caret from persisting into later trials:
+        // the autofocused input is about to be removed from the DOM, so blur it
+        // (and clear any text selection) before that happens.
+        if (document.activeElement && document.activeElement.blur) {
+            document.activeElement.blur();
+        }
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
         var respObj = data.response;
         for (var key in respObj) {
             if (respObj[key] == workerID) {
