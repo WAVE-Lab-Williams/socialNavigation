@@ -145,6 +145,7 @@ function processTrialData(data) {
             stripe_angle_bottom: data.stripe_angle_bottom,
             difficulty: data.difficulty,
             background_group: data.background_group,
+            group_size: data.group_size,
             identical: data.identical,
             screen_width: data.screen_width,
             screen_height: data.screen_height,

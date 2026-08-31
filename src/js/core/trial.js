@@ -210,6 +210,7 @@ function runSingleTrial(
             stripe_angle_bottom: stripe_angle_top-difficulty,
             difficulty: difficulty,
             background_group: group,
+            group_size: count,
             identical: identical,
             screen_width: w,
             screen_height: h,

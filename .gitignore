@@ -170,3 +170,6 @@ uv.lock
 tools/data/*
 !.gitkeep
 temp/
+
+# kw specific analysis code
+tools/socialNavigationAnalysis.py
